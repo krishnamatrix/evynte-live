@@ -1,8 +1,11 @@
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 class SocketService {
+  private socket: Socket | null;
+  private isClient: boolean;
+
   constructor() {
     this.socket = null;
     this.isClient = typeof window !== 'undefined';
