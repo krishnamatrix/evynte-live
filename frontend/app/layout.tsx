@@ -20,6 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#0f0c29" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
       <body>
         <div className="app">
           <ClientTemplate>{children}</ClientTemplate>
