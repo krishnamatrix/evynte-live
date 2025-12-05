@@ -1,0 +1,556 @@
+.organizerDashboard {
+  min-height: 100vh;
+  height: 100vh;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboardHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backButton:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.headerInfo h1 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.headerInfo p {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+}
+
+.dashboardStats {
+  display: flex;
+  align-items: center;
+}
+
+.statBadge {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.dashboardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.contactContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.contactCard {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.contactIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+}
+
+.contactTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 15px 0;
+}
+
+.contactDescription {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+}
+
+.emailButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.emailButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.questionsList {
+  background: white;
+  padding: 15px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.questionsList h2 {
+  margin: 0 0 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.emptyState svg {
+  color: #51cf66;
+  margin-bottom: 15px;
+}
+
+.questionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.questionCard {
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.questionCard:active {
+  background: white;
+  border-color: #667eea;
+  transform: scale(0.98);
+}
+
+.questionCard.selected {
+  background: white;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.questionCard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.questionUserInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userName {
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+.questionTime {
+  font-size: 12px;
+  color: #666;
+}
+
+.statusIcon {
+  flex-shrink: 0;
+}
+
+.statusIcon.pending {
+  color: #ffa500;
+}
+
+.statusIcon.escalated {
+  color: #ff6b6b;
+}
+
+.statusIcon.answered {
+  color: #51cf66;
+}
+
+.questionText {
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.questionMeta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgePrivate {
+  background: #ffe0e0;
+  color: #ff6b6b;
+}
+
+.badgeGeneral {
+  background: #e0f2ff;
+  color: #0066cc;
+}
+
+.badgeConfidence {
+  background: #e6fcf5;
+  color: #0ca678;
+}
+
+.answerPanel {
+  background: white;
+  padding: 15px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 200;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.answerPanel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.answerPanel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.closeButton {
+  background: #f0f0f0;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:active {
+  background: #e0e0e0;
+  transform: scale(0.95);
+}
+
+.closeButton:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.selectedQuestion {
+  background: #f8f9fa;
+  border-left: 4px solid #667eea;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.questionDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.questionDetails strong {
+  color: #333;
+  font-size: 15px;
+}
+
+.questionDetails span {
+  color: #666;
+  font-size: 13px;
+}
+
+.questionText-large {
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.answerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.answerForm label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.answerForm textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.answerForm textarea:focus {
+  border-color: #667eea;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: normal;
+  cursor: pointer;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.answerActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+}
+
+.buttonPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.buttonPrimary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.buttonPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.buttonSecondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.buttonSecondary:hover {
+  background: #e0e0e0;
+}
+
+.dashboardLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .questionCard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .questionTimestamp {
+    font-size: 11px;
+  }
+
+  .questionUserInfo h4 {
+    font-size: 14px;
+  }
+
+  .questionUserInfo span {
+    font-size: 12px;
+  }
+
+  .questionText {
+    font-size: 14px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 360px) {
+  .dashboardHeader {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .backButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .headerInfo h1 {
+    font-size: 16px;
+  }
+
+  .headerInfo p {
+    font-size: 12px;
+  }
+
+  .statBadge {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .questionsList {
+    padding: 12px;
+  }
+
+  .questionsList h2 {
+    font-size: 16px;
+  }
+
+  .answerPanel {
+    padding: 12px;
+  }
+
+  .button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Landscape mode */
+@media (orientation: landscape) and (max-height: 500px) {
+  .dashboardHeader {
+    padding: 10px 15px;
+  }
+
+  .headerInfo p {
+    display: none;
+  }
+
+  .answerPanel {
+    max-height: 50vh;
+  }
+}
