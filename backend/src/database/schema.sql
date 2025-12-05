@@ -177,7 +177,7 @@ CREATE POLICY "Service role can do everything on qa_embeddings" ON qa_embeddings
 -- Insert sample event for testing
 INSERT INTO events (name, description, organizer_id, organizer_name, organizer_email, start_date, end_date)
 VALUES (
-    'Tech Conference 2025',
+    'Indicon 2025',
     'Annual technology conference',
     'org123',
     'Jane Smith',

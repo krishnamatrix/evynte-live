@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Evynte - Event Management App',
   description: 'AI-powered event chat application',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',
-  themeColor: '#667eea',
+  themeColor: '#0f0c29',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
