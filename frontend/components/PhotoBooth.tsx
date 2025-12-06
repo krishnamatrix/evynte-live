@@ -1577,31 +1577,37 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
     backdropFilter: 'blur(10px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000,
-    padding: '20px',
+    zIndex: 9999,
+    padding: '10px',
+    overflow: 'auto',
   },
   cameraContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: '24px',
-    padding: '20px',
+    padding: '15px',
     maxWidth: '800px',
     width: '100%',
+    maxHeight: '95vh',
     border: '1px solid rgba(255, 255, 255, 0.2)',
+    overflow: 'auto',
+    margin: 'auto',
   },
   cameraHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '15px',
+    flexWrap: 'wrap' as const,
+    gap: '10px',
   },
   cameraTitle: {
     margin: 0,
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
     color: '#fff',
   },
@@ -1621,14 +1627,18 @@ const styles = {
   video: {
     width: '100%',
     borderRadius: '16px',
-    maxHeight: '500px',
+    maxHeight: '60vh',
     objectFit: 'cover' as const,
     transform: 'scaleX(-1)',
+    display: 'block',
   },
   cameraActions: {
     display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '25px',
+    marginTop: '20px',
+    gap: '10px',
   },
   captureButton: {
     width: '70px',
@@ -1674,7 +1684,7 @@ const styles = {
   captureHint: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: '0.9rem',
-    margin: '10px 0 0 0',
+    margin: '0',
     textAlign: 'center' as const,
   },
 };
@@ -1698,6 +1708,52 @@ if (typeof document !== 'undefined') {
         opacity: 0;
         transform: translateY(30px);
       }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Prevent body scroll when camera modal is open */
+    body:has(.image-overlay-app [style*="cameraModal"]) {
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .image-overlay-app [style*="cameraContainer"] {
+        padding: 10px !important;
+        border-radius: 16px !important;
+      }
+      
+      .image-overlay-app [style*="cameraTitle"] {
+        font-size: 1.1rem !important;
+      }
+
+      .image-overlay-app [style*="video"] {
+        border-radius: 12px !important;
+      }
+
+      .image-overlay-app [style*="captureButton"] {
+        width: 60px !important;
+        height: 60px !important;
+      }
+
+      .image-overlay-app [style*="captureButtonInner"] {
+        width: 45px !important;
+        height: 45px !important;
+      }
+    }
       to {
         opacity: 1;
         transform: translateY(0);
