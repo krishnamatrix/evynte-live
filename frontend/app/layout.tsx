@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import ClientTemplate from '../components/ClientTemplate';
+import ClientTemplate from '@/components/ClientTemplate';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {

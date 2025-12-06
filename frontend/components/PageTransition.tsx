@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import styles from '../styles/PageTransition.module.css';
+import styles from '@/styles/PageTransition.module.css';
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

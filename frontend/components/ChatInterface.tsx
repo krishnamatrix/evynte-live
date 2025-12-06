@@ -1,15 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { MessageCircle, Send, Loader2, User, Bot, ArrowLeft } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import getSocketService from '../lib/socket';
 import { messageAPI } from '../lib/api';
 import styles from '../styles/ChatInterface.module.css';
+import { useEventData } from '@/hooks/useEventData';
 
 interface Message {
-  _id: string;
+  id: string;
   eventId?: string;
   question: string;
   answer?: string;
@@ -29,30 +30,8 @@ interface TypingUser {
   userName: string;
 }
 
-interface EventType {
-  _id: string;
-  name: string;
-  description?: string;
-  settings?: {
-    aiEnabled?: boolean;
-    allowPersonalizedQuestions?: boolean;
-    allowGeneralQuestions?: boolean;
-  };
-}
-
-interface UserType {
-  userId: string;
-  name: string;
-  email: string;
-  role?: string;
-}
-
-interface ChatInterfaceProps {
-  event: EventType;
-  user: UserType;
-}
-
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
+const ChatInterface: React.FC = () => {
+  const { user, event } = useEventData();
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>('');
@@ -66,7 +45,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
   useEffect(() => {
     setMounted(true);
-    
+
     if (!event || !user) return;
 
     // Initialize socket service on client side only
@@ -75,7 +54,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
     // Connect to socket
     const socket = socketServiceRef.current.connect();
-    socketServiceRef.current.joinEvent(event._id, user.userId, user.name);
+    socketServiceRef.current.joinEvent(event.id, user.id, user.name);
 
     // Load existing messages
     loadMessages();
@@ -104,7 +83,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
   const loadMessages = async () => {
     try {
-      const response = await messageAPI.getByEvent(event._id, user.userId);
+      const response = await messageAPI.getByEvent(event.id, user.id);
       if (response.data.success) {
         setMessages(response.data.data);
       }
@@ -115,9 +94,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
   const handleReceiveAnswer = (message) => {
     setMessages(prev => {
-      const exists = prev.find(m => m._id === message._id);
+      const exists = prev.find(m => m.id === message.id);
       if (exists) {
-        return prev.map(m => m._id === message._id ? message : m);
+        return prev.map(m => m.id === message.id ? message : m);
       }
       return [...prev, message];
     });
@@ -134,7 +113,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
   };
 
   const handleTyping = ({ userId, userName, isTyping }) => {
-    if (userId === user.userId) return;
+    if (userId === user.id) return;
 
     setTypingUsers(prev => {
       if (isTyping) {
@@ -152,12 +131,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    
+
     if (!inputMessage.trim() || isLoading || !socketServiceRef.current) return;
 
     const questionData = {
-      eventId: event._id,
-      userId: user.userId,
+      eventId: event.id,
+      userId: user.id,
       userName: user.name,
       userEmail: user.email,
       question: inputMessage.trim(),
@@ -166,9 +145,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
     // Add message optimistically
     const tempMessage: Message = {
-      _id: `temp-${Date.now()}`,
-      eventId: event._id,
-      userId: user.userId,
+      id: `temp-${Date.now()}`,
+      eventId: event.id,
+      userId: user.id,
       userName: user.name,
       userEmail: user.email,
       question: inputMessage.trim(),
@@ -194,8 +173,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
     }
 
     socketServiceRef.current.sendTyping({
-      eventId: event._id,
-      userId: user.userId,
+      eventId: event.id,
+      userId: user.id,
       userName: user.name,
       isTyping: true
     });
@@ -203,8 +182,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
     typingTimeoutRef.current = setTimeout(() => {
       if (socketServiceRef.current) {
         socketServiceRef.current.sendTyping({
-          eventId: event._id,
-          userId: user.userId,
+          eventId: event.id,
+          userId: user.id,
           userName: user.name,
           isTyping: false
         });
@@ -221,7 +200,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
     const hasAnswer = message.answer && message.status === 'answered';
 
     return (
-      <div key={message._id} className={styles.messageContainer}>
+      <div key={message.id} className={styles.messageContainer}>
         {/* User Question */}
         <div className={`${styles.message} ${styles.userMessage}`}>
           <div className={styles.messageAvatar}>
@@ -288,8 +267,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
   return (
     <div className={styles.chatInterface}>
       <div className={styles.chatHeader}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -304,14 +283,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
 
       <div className={styles.chatMessages}>
         {messages.map(renderMessage)}
-        
+
         {typingUsers.length > 0 && (
           <div className={styles.typingIndicator}>
             <Loader2 className={styles.spinning} size={16} />
             <span>{typingUsers.map(u => u.userName).join(', ')} typing...</span>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -346,8 +325,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ event, user }) => {
             className={styles.chatInput}
             disabled={isLoading}
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={styles.chatSendButton}
             disabled={!inputMessage.trim() || isLoading}
           >

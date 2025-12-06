@@ -42,13 +42,13 @@ CREATE TABLE user_events (
     UNIQUE(user_id, event_id)
 );
 
--- Messages table
-CREATE TABLE messages (
+-- Messages table -- created on 
+CREATE TABLE event_chat_messages (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     event_id UUID REFERENCES events(id) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL,
-    user_name VARCHAR(255) NOT NULL,
-    user_email VARCHAR(255) NOT NULL,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
     question TEXT NOT NULL,
     answer TEXT,
     question_type VARCHAR(50) DEFAULT 'general' CHECK (question_type IN ('personalized', 'general')),

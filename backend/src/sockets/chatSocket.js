@@ -10,11 +10,12 @@ export const setupSocketHandlers = (io) => {
     // Join event room
     socket.on('join-event', async (data) => {
       const { eventId, userId, userName } = data;
+      console.log(eventId, userId, userName);
       socket.join(`event-${eventId}`);
       socket.join(`user-${userId}`);
-      
+
       console.log(`User ${userName} joined event ${eventId}`);
-      
+
       // Notify organizers
       socket.to(`event-${eventId}`).emit('user-joined', {
         userId,
@@ -27,10 +28,10 @@ export const setupSocketHandlers = (io) => {
     socket.on('send-question', async (data) => {
       try {
         const { eventId, userId, userName, userEmail, question, questionType } = data;
-
+        console.log(eventId, userId, userName, userEmail, question, questionType);
         // Validate event exists and is active
         const event = await Event.findById(eventId);
-        if (!event || !event.is_active) {
+        if (!event || event.event_status !== 'PUBLISHED') {
           socket.emit('error', { message: 'Event not found or inactive' });
           return;
         }
@@ -45,12 +46,13 @@ export const setupSocketHandlers = (io) => {
           questionType,
           status: 'pending'
         });
+        console.log(message);
 
         // Emit typing indicator
-        io.to(`event-${eventId}`).emit('typing', { 
+        io.to(`event-${eventId}`).emit('typing', {
           userId,
           userName,
-          isTyping: false 
+          isTyping: false
         });
 
         // Emit AI is processing
@@ -72,9 +74,9 @@ export const setupSocketHandlers = (io) => {
           // Store to vector DB if it's a general question
           if (questionType === 'general') {
             const vectorId = await storeQAPair(
-              question, 
-              aiResult.answer, 
-              eventId, 
+              question,
+              aiResult.answer,
+              eventId,
               message.id
             );
             await Message.update(message.id, {
@@ -182,7 +184,7 @@ export const setupSocketHandlers = (io) => {
         console.log(`AI Chat from ${userName}: ${message}`);
 
         // Emit processing status
-        socket.emit('ai-chat-status', { 
+        socket.emit('ai-chat-status', {
           status: 'processing',
           message: 'Thinking...'
         });
@@ -242,9 +244,9 @@ export const setupSocketHandlers = (io) => {
 
       } catch (error) {
         console.error('AI chat error:', error);
-        socket.emit('ai-chat-error', { 
+        socket.emit('ai-chat-error', {
           message: 'Failed to process your message. Please try again.',
-          error: error.message 
+          error: error.message
         });
       }
     });
@@ -269,9 +271,9 @@ export const setupSocketHandlers = (io) => {
 
       } catch (error) {
         console.error('AI chat simple error:', error);
-        socket.emit('ai-chat-error', { 
+        socket.emit('ai-chat-error', {
           message: 'Failed to process your message.',
-          error: error.message 
+          error: error.message
         });
       }
     });
@@ -280,9 +282,9 @@ export const setupSocketHandlers = (io) => {
     socket.on('ai-suggestions', async (data) => {
       try {
         const { message } = data;
-        
+
         const intent = await conversationService.extractIntent(message);
-        
+
         socket.emit('ai-suggestions-response', {
           intent: intent.intent,
           confidence: intent.confidence,

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { LucideIcon } from 'lucide-react';
+import { CameraIcon, LucideIcon } from 'lucide-react';
 import {
   MessageCircle,
   Calendar,
@@ -35,12 +35,41 @@ interface AppItem {
   color: string;
 }
 
+interface User {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    name?: string;
+    full_name?: string;
+    avatar_url?: string;
+    company?: string;
+    [key: string]: any;
+  };
+}
+
+interface Event {
+  id?: string;
+  name: string;
+  date: string;
+  code?: string;
+  description?: string;
+  venue?: string;
+  organizerEmail?: string;
+}
+
 interface HomeScreenProps {
   eventName?: string;
   eventDate?: string;
+  initialUser?: User | null;
+  initialEvent?: Event | null;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", eventDate = "Date" }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ 
+  eventName = "Event Name", 
+  eventDate = "Date",
+  initialUser = null,
+  initialEvent = null
+}) => {
   const { eventCode } = useParams();
   const router = useRouter();
   const [navigating, setNavigating] = useState(false);
@@ -50,7 +79,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", event
   const [authStep, setAuthStep] = useState<'email' | 'otp'>('email');
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(initialUser);
+  const [event, setEvent] = useState<Event | null>(initialEvent || {
+    name: eventName,
+    date: eventDate,
+    code: eventCode as string
+  });
 
   useEffect(() => {
     const checkUser = async () => {
@@ -67,6 +101,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", event
   }, []);
 
   const activeAppItems: AppItem[] = [
+    // {
+    //   id: 'chat',
+    //   name: 'Chat',
+    //   icon: MessageCircle,
+    //   path: `${eventCode}/chat`,
+    //   color: '#4CAF50'
+    // },
+    
     {
       id: 'agenda',
       name: 'Agenda',
@@ -80,6 +122,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", event
       icon: Calendar,
       path: `${eventCode}/schedule`,
       color: '#2196F3'
+    },{
+      id: 'photobooth',
+      name: 'Photobooth',
+      icon: CameraIcon,
+      path: `${eventCode}/photobooth`,
+      color: '#607D8B'
     },
     {
       id: 'organizers',
@@ -165,15 +213,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", event
 
   const handleNavigation = (path: string) => {
     if (navigating) return;
-
+    
     setNavigating(true);
     // Small delay to show the tap animation
     setTimeout(() => {
+      // Pass user and event data via URL state or localStorage for now
+      if (user && event) {
+        sessionStorage.setItem('evynte_user', JSON.stringify(user));
+        sessionStorage.setItem('evynte_event', JSON.stringify(event));
+      }
       router.push(path);
     }, 150);
-  };
-
-  const handleLoginClick = () => {
+  };  const handleLoginClick = () => {
     if (user) {
       // Logic to logout
       handleLogout();
@@ -237,12 +288,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ eventName = "Event Name", event
       // Verify in registration table
       // Assuming 'registrations' table has 'email' column.
       // We need to handle RLS. If RLS blocks read, this will fail.
-      // Trying to select.
+      // Trying to select.  
       const { data: registrationData, error: registrationError } = await supabase
-        .from('registrations')
-        .select('email')
-        .eq('email', loginEmail)
-        .single();
+        .from('event_user_registrations')
+        .select('id')
+        .eq('email_address', loginEmail)
+        .eq('event_id', '77797ebf-a617-49f8-beb8-baec6ff21ec9')
+        .limit(1)
+        .maybeSingle();
 
       // If table doesn't exist or RLS blocks, this might error. 
       // If registrationError is "PGRST116" (JSON object requested, multiple (or no) rows returned), it means not found (if .single())

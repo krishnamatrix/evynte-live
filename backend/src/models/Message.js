@@ -5,7 +5,7 @@ export const Message = {
   async create(messageData) {
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('messages')
+      .from('event_chat_messages')
       .insert({
         event_id: messageData.eventId,
         user_id: messageData.userId,
@@ -33,7 +33,7 @@ export const Message = {
   async findByEvent(eventId, options = {}) {
     const supabase = getSupabase();
     let query = supabase
-      .from('messages')
+      .from('event_chat_messages')
       .select('*')
       .eq('event_id', eventId);
 
@@ -56,7 +56,7 @@ export const Message = {
   async findPending(eventId) {
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('messages')
+      .from('event_chat_messages')
       .select('*')
       .eq('event_id', eventId)
       .in('status', ['pending', 'escalated'])
@@ -70,7 +70,7 @@ export const Message = {
   async findById(id) {
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('messages')
+      .from('event_chat_messages')
       .select('*')
       .eq('id', id)
       .single();
@@ -94,7 +94,7 @@ export const Message = {
     if (updates.vectorDBId) updateData.vector_db_id = updates.vectorDBId;
 
     const { data, error } = await supabase
-      .from('messages')
+      .from('event_chat_messages')
       .update(updateData)
       .eq('id', id)
       .select()
@@ -108,7 +108,7 @@ export const Message = {
   async findUnsavedAnswers() {
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('messages')
+      .from('event_chat_messages')
       .select('*, events(*)')
       .eq('question_type', 'general')
       .eq('status', 'answered')

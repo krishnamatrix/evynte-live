@@ -46,7 +46,6 @@ export const Event = {
       .select('*')
       .eq('id', id)
       .single();
-
     if (error) throw error;
     return data;
   },
@@ -55,7 +54,7 @@ export const Event = {
   async update(id, updates) {
     const supabase = getSupabase();
     const updateData = {};
-    
+
     if (updates.name) updateData.name = updates.name;
     if (updates.description !== undefined) updateData.description = updates.description;
     if (updates.startDate) updateData.start_date = updates.startDate;
