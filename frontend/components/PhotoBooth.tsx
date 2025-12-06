@@ -8,7 +8,7 @@ const DEFAULT_TEMPLATES = [
 ];
 const DEFAULT_TEMPLATE_PATH = DEFAULT_TEMPLATES[0].path;
 const TARGET_SIZE = 1080;
-const DEFAULT_HASHTAGS = "#r10Ethics #Clap2023 #IEEE";
+const DEFAULT_HASHTAGS = "#INDICON2025 #IEEEBangalore";
 
 function PhotoBooth() {
   const [finalImageUrl, setFinalImageUrl] = useState(null);
@@ -32,6 +32,7 @@ function PhotoBooth() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [originalImageData, setOriginalImageData] = useState<string | null>(null);
+  const [shareDialog, setShareDialog] = useState<{isOpen: boolean, message: string, hashtags: string} | null>(null);
   
   const fileInputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -370,6 +371,139 @@ function PhotoBooth() {
     document.body.removeChild(link);
   };
 
+  const handleSocialShare = async (platform: string) => {
+    if (!finalImageUrl) return;
+
+    try {
+      // First, download the image automatically
+      const response = await fetch(finalImageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `photobooth-${Date.now()}.png`, { type: 'image/png' });
+
+      // For mobile devices with Web Share API, share directly with image
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Photo Booth',
+            text: `${hashtags}\n\nCreated with Photo Booth Studio`,
+          });
+          return;
+        } catch (shareErr) {
+          if ((shareErr as Error).name === 'AbortError') {
+            return; // User cancelled, don't show error
+          }
+          // Fall through to desktop sharing
+        }
+      }
+
+      // For desktop: Download image first, then open social media
+      // Copy hashtags to clipboard for easy pasting
+      try {
+        await navigator.clipboard.writeText(hashtags);
+      } catch (clipboardErr) {
+        console.error('Failed to copy to clipboard:', clipboardErr);
+      }
+
+      // Prepare platform URLs and messages
+      const shareText = encodeURIComponent(hashtags);
+      let url = '';
+      let message = '';
+      
+      switch(platform) {
+        case 'facebook':
+          url = `https://www.facebook.com/`;
+          message = 'Step 1: Your image will download now.\nStep 2: Facebook will open - click "Photo/Video" to upload the downloaded image.\nStep 3: Paste the hashtags (already copied to clipboard).';
+          break;
+        case 'twitter':
+          url = `https://twitter.com/intent/tweet?text=${shareText}`;
+          message = 'Step 1: Your image will download now.\nStep 2: X/Twitter will open with hashtags - click the image icon 📷 to upload your photo.';
+          break;
+        case 'linkedin':
+          url = `https://www.linkedin.com/feed/`;
+          message = 'Step 1: Your image will download now.\nStep 2: LinkedIn will open - click "Start a post" and add the image.\nStep 3: Paste the hashtags (already copied to clipboard).';
+          break;
+        case 'whatsapp':
+          url = `https://web.whatsapp.com/`;
+          message = 'Step 1: Your image will download now.\nStep 2: WhatsApp Web will open - select a chat and attach the image.\nStep 3: Paste the hashtags (already copied to clipboard).';
+          break;
+        default:
+          return;
+      }
+      
+      // Show dialog immediately
+      setShareDialog({
+        isOpen: true,
+        message: message,
+        hashtags: hashtags
+      });
+
+      // Download image
+      const link = document.createElement('a');
+      link.href = finalImageUrl;
+      link.download = `photobooth-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Open platform after a short delay
+      setTimeout(() => {
+        window.open(url, '_blank', 'width=800,height=600');
+      }, 1000);
+
+    } catch (err) {
+      console.error('Error sharing:', err);
+      setError('Failed to prepare sharing. Please download manually and share.');
+    }
+  };
+
+  const handleShareWithImage = async () => {
+    if (!finalImageUrl) return;
+
+    try {
+      // Convert data URL to blob
+      const response = await fetch(finalImageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'photo-booth.png', { type: 'image/png' });
+
+      // Check if Web Share API is available
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Photo Booth',
+          text: `${hashtags}\n\nCreated with Photo Booth Studio`,
+        });
+      } else {
+        // Fallback: Download image and copy hashtags
+        const link = document.createElement('a');
+        link.href = finalImageUrl;
+        link.download = `photobooth-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        await navigator.clipboard.writeText(hashtags);
+        setShareDialog({
+          isOpen: true,
+          message: 'Image downloaded and hashtags copied to clipboard! You can now share the image on your preferred platform.',
+          hashtags: hashtags
+        });
+      }
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        console.error('Error sharing:', err);
+        setError('Failed to share. Image will be downloaded for manual sharing.');
+        // Fallback download
+        const link = document.createElement('a');
+        link.href = finalImageUrl;
+        link.download = `photobooth-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+
   const copyHashtags = async () => {
     try {
       await navigator.clipboard.writeText(hashtags);
@@ -679,7 +813,7 @@ function PhotoBooth() {
         </div>
 
         {/* Template Upload Section */}
-        <div style={styles.customTemplateSection}>
+        {/* <div style={styles.customTemplateSection}>
           <h4 style={styles.subsectionTitle}>Upload Template</h4>
           
           <div style={styles.templateMethodTabs}>
@@ -760,7 +894,7 @@ function PhotoBooth() {
           >
             ↺ Reset to Default Template
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* File Upload Area */}
@@ -969,6 +1103,56 @@ function PhotoBooth() {
             <span>🎨 Template: {selectedTemplate}</span>
             <span>📦 Ready to share!</span>
           </div>
+
+          {/* Social Media Share Section */}
+          <div style={styles.shareSection}>
+            <h4 style={styles.shareTitle}>📤 Share to Social Media</h4>
+            <div style={styles.shareButtonsGrid}>
+              <button 
+                onClick={handleShareWithImage}
+                style={styles.shareButton}
+                title="Share via device options"
+              >
+                <span style={styles.shareIcon}>📱</span>
+                <span>Share</span>
+              </button>
+              <button 
+                onClick={() => handleSocialShare('facebook')}
+                style={{...styles.shareButton, ...styles.facebookButton}}
+                title="Share on Facebook"
+              >
+                <span style={styles.shareIcon}>📘</span>
+                <span>Facebook</span>
+              </button>
+              <button 
+                onClick={() => handleSocialShare('twitter')}
+                style={{...styles.shareButton, ...styles.twitterButton}}
+                title="Share on X"
+              >
+                <span style={styles.shareIcon}>𝕏</span>
+                <span>X</span>
+              </button>
+              <button 
+                onClick={() => handleSocialShare('linkedin')}
+                style={{...styles.shareButton, ...styles.linkedinButton}}
+                title="Share on LinkedIn"
+              >
+                <span style={styles.shareIcon}>💼</span>
+                <span>LinkedIn</span>
+              </button>
+              <button 
+                onClick={() => handleSocialShare('whatsapp')}
+                style={{...styles.shareButton, ...styles.whatsappButton}}
+                title="Share on WhatsApp"
+              >
+                <span style={styles.shareIcon}>💬</span>
+                <span>WhatsApp</span>
+              </button>
+            </div>
+            <p style={styles.shareNote}>
+              💡 On mobile: Direct share with image. On desktop: Image auto-downloads, hashtags copied, then platform opens
+            </p>
+          </div>
         </div>
       )}
 
@@ -1016,6 +1200,32 @@ function PhotoBooth() {
           Made with ❤️ for IEEE R10 • All images are processed locally in your browser
         </p>
       </footer>
+
+      {/* Share Dialog */}
+      {shareDialog?.isOpen && (
+        <div style={styles.dialogOverlay} onClick={() => setShareDialog(null)}>
+          <div style={styles.dialogBox} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.dialogHeader}>
+              <h3 style={styles.dialogTitle}>✅ Ready to Share!</h3>
+              <button onClick={() => setShareDialog(null)} style={styles.dialogCloseButton}>
+                ×
+              </button>
+            </div>
+            <div style={styles.dialogContent}>
+              <p style={styles.dialogMessage}>{shareDialog.message}</p>
+              <div style={styles.dialogHashtagsBox}>
+                <p style={styles.dialogHashtagsLabel}>📋 Hashtags copied to clipboard:</p>
+                <div style={styles.dialogHashtags}>{shareDialog.hashtags}</div>
+              </div>
+            </div>
+            <div style={styles.dialogFooter}>
+              <button onClick={() => setShareDialog(null)} style={styles.dialogButton}>
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1588,6 +1798,67 @@ const styles = {
     fontSize: '0.95rem',
     margin: '15px 0 0 0',
   },
+  shareSection: {
+    marginTop: '30px',
+    padding: '20px',
+    backgroundColor: 'rgba(15, 12, 41, 0.4)',
+    borderRadius: '15px',
+    border: '1px solid rgba(139, 92, 246, 0.2)',
+  },
+  shareTitle: {
+    fontSize: '1.2rem',
+    color: '#fff',
+    margin: '0 0 20px 0',
+    fontWeight: '600',
+    textAlign: 'center' as const,
+  },
+  shareButtonsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+    gap: '12px',
+    marginBottom: '15px',
+  },
+  shareButton: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    gap: '8px',
+    padding: '15px 10px',
+    borderRadius: '12px',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    transition: 'all 0.3s ease',
+    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+    color: '#fff',
+  },
+  shareIcon: {
+    fontSize: '1.5rem',
+  },
+  facebookButton: {
+    backgroundColor: 'rgba(24, 119, 242, 0.2)',
+    border: '1px solid rgba(24, 119, 242, 0.4)',
+  },
+  twitterButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+  },
+  linkedinButton: {
+    backgroundColor: 'rgba(10, 102, 194, 0.2)',
+    border: '1px solid rgba(10, 102, 194, 0.4)',
+  },
+  whatsappButton: {
+    backgroundColor: 'rgba(37, 211, 102, 0.2)',
+    border: '1px solid rgba(37, 211, 102, 0.4)',
+  },
+  shareNote: {
+    fontSize: '0.85rem',
+    color: 'rgba(255, 255, 255, 0.7)',
+    textAlign: 'center' as const,
+    margin: '10px 0 0 0',
+    fontStyle: 'italic',
+  },
   hashtagsSection: {
     backgroundColor: 'rgba(30, 27, 75, 0.6)',
     backdropFilter: 'blur(20px)',
@@ -1770,6 +2041,105 @@ const styles = {
     margin: '0',
     textAlign: 'center' as const,
   },
+  dialogOverlay: {
+    position: 'fixed' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backdropFilter: 'blur(5px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10000,
+    padding: '20px',
+    animation: 'fadeIn 0.2s ease-out',
+  },
+  dialogBox: {
+    backgroundColor: 'rgba(30, 27, 75, 0.95)',
+    borderRadius: '20px',
+    maxWidth: '500px',
+    width: '100%',
+    border: '2px solid rgba(139, 92, 246, 0.3)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+    animation: 'scaleIn 0.3s ease-out',
+    overflow: 'hidden',
+  },
+  dialogHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '20px 25px',
+    borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
+    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+  },
+  dialogTitle: {
+    margin: 0,
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#fff',
+  },
+  dialogCloseButton: {
+    background: 'rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '8px',
+    width: '36px',
+    height: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    color: '#fff',
+    fontSize: '1.5rem',
+    transition: 'all 0.2s ease',
+  },
+  dialogContent: {
+    padding: '25px',
+  },
+  dialogMessage: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: '1rem',
+    lineHeight: '1.6',
+    margin: '0 0 20px 0',
+  },
+  dialogHashtagsBox: {
+    backgroundColor: 'rgba(15, 12, 41, 0.6)',
+    borderRadius: '12px',
+    padding: '15px',
+    border: '1px solid rgba(139, 92, 246, 0.3)',
+  },
+  dialogHashtagsLabel: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: '0.9rem',
+    margin: '0 0 10px 0',
+    fontWeight: '600',
+  },
+  dialogHashtags: {
+    color: '#8b5cf6',
+    fontSize: '1rem',
+    fontFamily: 'monospace',
+    wordBreak: 'break-word' as const,
+    lineHeight: '1.5',
+  },
+  dialogFooter: {
+    padding: '20px 25px',
+    borderTop: '1px solid rgba(139, 92, 246, 0.2)',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  dialogButton: {
+    background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
+    color: 'white',
+    border: 'none',
+    padding: '12px 40px',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    fontWeight: '600',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
+  },
 };
 
 // Add hover effects and animations
@@ -1819,6 +2189,43 @@ if (typeof document !== 'undefined') {
       box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
     }
 
+    /* Social media share button hover effects */
+    .image-overlay-app [style*="shareButton"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(139, 92, 246, 0.4);
+    }
+
+    .image-overlay-app [style*="facebookButton"]:hover {
+      box-shadow: 0 6px 15px rgba(24, 119, 242, 0.5);
+      backgroundColor: rgba(24, 119, 242, 0.3);
+    }
+
+    .image-overlay-app [style*="twitterButton"]:hover {
+      box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
+      backgroundColor: rgba(0, 0, 0, 0.5);
+    }
+
+    .image-overlay-app [style*="linkedinButton"]:hover {
+      box-shadow: 0 6px 15px rgba(10, 102, 194, 0.5);
+      backgroundColor: rgba(10, 102, 194, 0.3);
+    }
+
+    .image-overlay-app [style*="whatsappButton"]:hover {
+      box-shadow: 0 6px 15px rgba(37, 211, 102, 0.5);
+      backgroundColor: rgba(37, 211, 102, 0.3);
+    }
+
+    /* Dialog hover effects */
+    .image-overlay-app [style*="dialogCloseButton"]:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .image-overlay-app [style*="dialogButton"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+    }
+
     @media (max-width: 768px) {
       .image-overlay-app [style*="cameraContainer"] {
         padding: 10px !important;
@@ -1841,6 +2248,11 @@ if (typeof document !== 'undefined') {
       .image-overlay-app [style*="captureButtonInner"] {
         width: 45px !important;
         height: 45px !important;
+      }
+
+      .image-overlay-app [style*="shareButtonsGrid"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
       }
     }
       to {
