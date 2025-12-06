@@ -2,11 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, QrCode, Download, Share2 } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 export default function QRCodePage() {
   const router = useRouter();
-  
+
   const attendeeData = {
     name: 'John Doe',
     email: 'john.doe@example.com',
@@ -17,8 +17,8 @@ export default function QRCodePage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -27,9 +27,9 @@ export default function QRCodePage() {
         <h1 className={styles.title}>My QR Code</h1>
       </div>
 
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -61,23 +61,23 @@ export default function QRCodePage() {
             <QrCode size={160} color="#0f0c29" />
           </div>
 
-          <h3 style={{ 
-            color: 'rgba(255, 255, 255, 0.95)', 
+          <h3 style={{
+            color: 'rgba(255, 255, 255, 0.95)',
             margin: '0 0 8px 0',
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
             {attendeeData.name}
           </h3>
-          <p style={{ 
-            color: 'rgba(255, 255, 255, 0.7)', 
+          <p style={{
+            color: 'rgba(255, 255, 255, 0.7)',
             margin: '0 0 4px 0',
             fontSize: '14px'
           }}>
             {attendeeData.company}
           </p>
-          <p style={{ 
-            color: 'rgba(139, 92, 246, 0.9)', 
+          <p style={{
+            color: 'rgba(139, 92, 246, 0.9)',
             margin: '0',
             fontSize: '13px',
             fontWeight: '600'

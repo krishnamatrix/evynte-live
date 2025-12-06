@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Mic2, MapPin, Clock, Linkedin, Twitter, Globe } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockSpeakers = [
   {
@@ -77,8 +77,8 @@ export default function SpeakersPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -87,9 +87,9 @@ export default function SpeakersPage() {
         <h1 className={styles.title}>Speakers</h1>
       </div>
 
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -107,8 +107,8 @@ export default function SpeakersPage() {
               padding: '20px',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              boxShadow: selectedSpeaker === speaker.id 
-                ? '0 8px 32px rgba(139, 92, 246, 0.4)' 
+              boxShadow: selectedSpeaker === speaker.id
+                ? '0 8px 32px rgba(139, 92, 246, 0.4)'
                 : '0 4px 16px rgba(0, 0, 0, 0.3)'
             }}
           >
@@ -126,25 +126,25 @@ export default function SpeakersPage() {
               }}>
                 {speaker.image}
               </div>
-              
+
               <div style={{ flex: 1 }}>
-                <h3 style={{ 
-                  margin: '0 0 5px 0', 
+                <h3 style={{
+                  margin: '0 0 5px 0',
                   color: 'rgba(255, 255, 255, 0.95)',
                   fontSize: '18px',
                   fontWeight: 'bold'
                 }}>
                   {speaker.name}
                 </h3>
-                <p style={{ 
-                  margin: '0 0 3px 0', 
+                <p style={{
+                  margin: '0 0 3px 0',
                   color: 'rgba(255, 255, 255, 0.7)',
                   fontSize: '14px'
                 }}>
                   {speaker.title}
                 </p>
-                <p style={{ 
-                  margin: '0', 
+                <p style={{
+                  margin: '0',
                   color: 'rgba(139, 92, 246, 0.9)',
                   fontSize: '13px',
                   fontWeight: '600'
@@ -152,19 +152,19 @@ export default function SpeakersPage() {
                   {speaker.company}
                 </p>
               </div>
-              
+
               <Mic2 size={24} color="rgba(139, 92, 246, 0.8)" />
             </div>
 
             {selectedSpeaker === speaker.id && (
-              <div style={{ 
-                marginTop: '15px', 
-                paddingTop: '15px', 
-                borderTop: '1px solid rgba(139, 92, 246, 0.3)' 
+              <div style={{
+                marginTop: '15px',
+                paddingTop: '15px',
+                borderTop: '1px solid rgba(139, 92, 246, 0.3)'
               }}>
-                <p style={{ 
-                  color: 'rgba(255, 255, 255, 0.85)', 
-                  fontSize: '14px', 
+                <p style={{
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '14px',
                   lineHeight: '1.6',
                   marginBottom: '15px'
                 }}>

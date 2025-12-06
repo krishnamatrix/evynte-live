@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Bookmark, Clock, MapPin, Trash2, GraduationCap, Mic2 } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockBookmarks = [
   {
@@ -59,8 +59,8 @@ export default function BookmarksPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -69,9 +69,9 @@ export default function BookmarksPage() {
         <h1 className={styles.title}>My Bookmarks</h1>
       </div>
 
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -118,11 +118,11 @@ export default function BookmarksPage() {
                   }}>
                     <Icon size={20} color={bookmark.color} />
                   </div>
-                  
+
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                      <h4 style={{ 
-                        margin: 0, 
+                      <h4 style={{
+                        margin: 0,
                         color: 'rgba(255, 255, 255, 0.95)',
                         fontSize: '15px',
                         fontWeight: '600',
@@ -149,9 +149,9 @@ export default function BookmarksPage() {
                         <Trash2 size={14} />
                       </button>
                     </div>
-                    
-                    <p style={{ 
-                      margin: '0 0 8px 0', 
+
+                    <p style={{
+                      margin: '0 0 8px 0',
                       color: 'rgba(255, 255, 255, 0.7)',
                       fontSize: '13px'
                     }}>

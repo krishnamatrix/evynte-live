@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Bell, Clock, AlertCircle, Info, CheckCircle } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockNotifications = [
   {
@@ -58,8 +58,8 @@ export default function NotificationsPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -68,9 +68,9 @@ export default function NotificationsPage() {
         <h1 className={styles.title}>Updates & Notifications</h1>
       </div>
 
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -106,19 +106,19 @@ export default function NotificationsPage() {
               }}>
                 <Icon size={20} color={notification.color} />
               </div>
-              
+
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
-                  <h4 style={{ 
-                    margin: 0, 
+                  <h4 style={{
+                    margin: 0,
                     color: 'rgba(255, 255, 255, 0.95)',
                     fontSize: '15px',
                     fontWeight: '600'
                   }}>
                     {notification.title}
                   </h4>
-                  <span style={{ 
-                    fontSize: '11px', 
+                  <span style={{
+                    fontSize: '11px',
                     color: 'rgba(255, 255, 255, 0.5)',
                     whiteSpace: 'nowrap',
                     marginLeft: '8px'
@@ -126,8 +126,8 @@ export default function NotificationsPage() {
                     {notification.time}
                   </span>
                 </div>
-                <p style={{ 
-                  margin: 0, 
+                <p style={{
+                  margin: 0,
                   color: 'rgba(255, 255, 255, 0.75)',
                   fontSize: '14px',
                   lineHeight: '1.5'

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, UserCheck } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 export default function CheckInPage() {
   const router = useRouter();

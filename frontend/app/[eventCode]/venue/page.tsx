@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, MapPin, Navigation, Coffee, Utensils, Info, Wifi, Users } from 'lucide-react';
-import styles from '../../styles/PlaceholderPage.module.css';
+import styles from '@/styles/PlaceholderPage.module.css';
 
 const venueLocations = [
   { id: 1, name: 'Main Hall A', type: 'conference', icon: Users, floor: 1, color: '#8b5cf6' },
@@ -28,8 +28,8 @@ export default function VenuePage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button 
-          className={styles.backButton} 
+        <button
+          className={styles.backButton}
           onClick={() => router.back()}
           aria-label="Go back"
         >
@@ -46,7 +46,7 @@ export default function VenuePage() {
             style={{
               flex: 1,
               padding: '12px',
-              background: selectedFloor === 1 
+              background: selectedFloor === 1
                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
                 : 'rgba(30, 27, 75, 0.6)',
               border: `1px solid ${selectedFloor === 1 ? 'rgba(139, 92, 246, 0.5)' : 'rgba(139, 92, 246, 0.3)'}`,
@@ -64,7 +64,7 @@ export default function VenuePage() {
             style={{
               flex: 1,
               padding: '12px',
-              background: selectedFloor === 2 
+              background: selectedFloor === 2
                 ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
                 : 'rgba(30, 27, 75, 0.6)',
               border: `1px solid ${selectedFloor === 2 ? 'rgba(139, 92, 246, 0.5)' : 'rgba(139, 92, 246, 0.3)'}`,
@@ -102,7 +102,7 @@ export default function VenuePage() {
         <h3 style={{ color: 'rgba(255, 255, 255, 0.9)', margin: '0 0 10px 0', fontSize: '16px' }}>
           Locations on Floor {selectedFloor}
         </h3>
-        
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {filteredLocations.map((location) => {
             const Icon = location.icon;
@@ -136,16 +136,16 @@ export default function VenuePage() {
                   <Icon size={20} color={location.color} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ 
-                    margin: 0, 
+                  <h4 style={{
+                    margin: 0,
                     color: 'rgba(255, 255, 255, 0.95)',
                     fontSize: '15px',
                     fontWeight: '600'
                   }}>
                     {location.name}
                   </h4>
-                  <p style={{ 
-                    margin: '2px 0 0 0', 
+                  <p style={{
+                    margin: '2px 0 0 0',
                     color: 'rgba(255, 255, 255, 0.6)',
                     fontSize: '12px',
                     textTransform: 'capitalize'
