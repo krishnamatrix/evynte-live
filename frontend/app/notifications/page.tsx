@@ -148,7 +148,7 @@ export default function NotificationsPage() {
           fontSize: '14px'
         }}>
           <Bell size={32} color="rgba(255, 255, 255, 0.3)" style={{ marginBottom: '10px' }} />
-          <p style={{ margin: 0 }}>You're all caught up!</p>
+          <p style={{ margin: 0 }}>You&apos;re all caught up!</p>
         </div>
       </div>
     </div>

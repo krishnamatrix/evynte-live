@@ -659,7 +659,7 @@ function PhotoBooth() {
                 </button>
               </div>
               <p style={styles.corsWarning}>
-                ⚠️ Some URLs may be blocked by CORS. If URL doesn't work, try uploading instead.
+                ⚠️ Some URLs may be blocked by CORS. If URL doesn&apos;t work, try uploading instead.
               </p>
               
               <div style={styles.templateHelp}>
@@ -667,7 +667,7 @@ function PhotoBooth() {
                 <ul style={styles.tipsList}>
                   <li>For best results, use 1080×1080px images</li>
                   <li>PNG with transparent areas works best for overlays</li>
-                  <li>To find templates: Search for "PNG frame transparent background"</li>
+                  <li>To find templates: Search for &quot;PNG frame transparent background&quot;</li>
                   <li>Need help? Use the default template or upload your own</li>
                 </ul>
               </div>
