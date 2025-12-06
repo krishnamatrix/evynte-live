@@ -1,7 +1,12 @@
 'use client';
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 
-const DEFAULT_TEMPLATE_PATH = '/CLAP R10 (1).png';
+const DEFAULT_TEMPLATES = [
+  { id: 'indicon1', name: 'INDICON 2025 - 1', path: '/assets/INDICON2025_1.png' },
+  { id: 'indicon2', name: 'INDICON 2025 - 2', path: '/assets/INDICON2025_2.png' },
+  { id: 'indicon3', name: 'INDICON 2025 - 3', path: '/assets/INDICON2025_3.png' },
+];
+const DEFAULT_TEMPLATE_PATH = DEFAULT_TEMPLATES[0].path;
 const TARGET_SIZE = 1080;
 const DEFAULT_HASHTAGS = "#r10Ethics #Clap2023 #IEEE";
 
@@ -14,7 +19,7 @@ function PhotoBooth() {
   const [progress, setProgress] = useState(0);
   const [templateLink, setTemplateLink] = useState(DEFAULT_TEMPLATE_PATH);
   const [customTemplateLink, setCustomTemplateLink] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState('default');
+  const [selectedTemplate, setSelectedTemplate] = useState(DEFAULT_TEMPLATES[0].id);
   const [templateValidation, setTemplateValidation] = useState({ isValid: true, message: 'Default template loaded' });
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -39,12 +44,16 @@ function PhotoBooth() {
     
     return new Promise((resolve, reject) => {
       const img = new Image();
+      // Add crossOrigin for local images to avoid CORS issues
+      if (url.startsWith('/')) {
+        img.crossOrigin = 'anonymous';
+      }
       img.onload = () => {
         templateCache.current.set(url, img);
         resolve(img);
       };
-      img.onerror = () => {
-        console.warn(`Failed to preload template: ${url}`);
+      img.onerror = (e) => {
+        console.error(`Failed to preload template: ${url}`, e);
         templateCache.current.delete(url);
         
         // If local template fails, show specific error
@@ -134,11 +143,32 @@ function PhotoBooth() {
   };
 
   const resetToDefaultTemplate = () => {
-    setTemplateLink(DEFAULT_TEMPLATE_PATH);
-    setSelectedTemplate('default');
+    setTemplateLink(DEFAULT_TEMPLATES[0].path);
+    setSelectedTemplate(DEFAULT_TEMPLATES[0].id);
     setCustomTemplateLink('');
     setTemplateValidation({ isValid: true, message: 'Using default template' });
     setTemplatePreviewUrl(null);
+  };
+
+  const handleDefaultTemplateSelect = async (template: typeof DEFAULT_TEMPLATES[0]) => {
+    try {
+      setTemplateValidation({ isValid: false, message: 'Loading template...' });
+      // Check if already cached, if not preload it
+      if (!templateCache.current.has(template.path)) {
+        await preloadTemplate(template.path);
+      }
+      setTemplateLink(template.path);
+      setSelectedTemplate(template.id);
+      setCustomTemplateLink('');
+      setTemplatePreviewUrl(null);
+      setTemplateValidation({ isValid: true, message: `${template.name} selected` });
+    } catch (error) {
+      console.error('Error selecting template:', error);
+      setTemplateValidation({ 
+        isValid: false, 
+        message: `Failed to load ${template.name}` 
+      });
+    }
   };
 
   const handleTemplateFileUpload = (event) => {
@@ -557,6 +587,20 @@ function PhotoBooth() {
   }, [stream]);
 
   useEffect(() => {
+    // Preload all default templates on mount
+    const loadDefaultTemplates = async () => {
+      for (const template of DEFAULT_TEMPLATES) {
+        try {
+          await preloadTemplate(template.path);
+        } catch (error) {
+          console.error(`Failed to preload ${template.name}:`, error);
+        }
+      }
+    };
+    loadDefaultTemplates();
+  }, []);
+
+  useEffect(() => {
     if (isAdjustingImage && originalImageData) {
       const timeoutId = setTimeout(() => {
         reprocessWithAdjustments();
@@ -596,6 +640,42 @@ function PhotoBooth() {
           }}>
             {templateValidation.isValid ? '✓' : '⚠️'} {templateValidation.message}
           </span>
+        </div>
+
+        {/* Default Templates Grid */}
+        <div style={styles.defaultTemplatesSection}>
+          <h4 style={styles.subsectionTitle}>Default Templates</h4>
+          <div style={styles.templateGrid}>
+            {DEFAULT_TEMPLATES.map((template) => (
+              <div
+                key={template.id}
+                onClick={() => handleDefaultTemplateSelect(template)}
+                style={{
+                  ...styles.templateCard,
+                  borderColor: selectedTemplate === template.id ? '#8b5cf6' : 'rgba(139, 92, 246, 0.3)',
+                  backgroundColor: selectedTemplate === template.id ? 'rgba(139, 92, 246, 0.1)' : 'rgba(15, 12, 41, 0.4)',
+                }}
+              >
+                <div style={styles.templatePreview}>
+                  <img
+                    src={template.path}
+                    alt={template.name}
+                    style={styles.templateImage}
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${template.path}`);
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  {selectedTemplate === template.id && (
+                    <span style={styles.selectedBadge}>✓ Selected</span>
+                  )}
+                </div>
+                <div style={styles.templateInfo}>
+                  <span style={styles.templateName}>{template.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Template Upload Section */}
@@ -1022,36 +1102,37 @@ const styles = {
     fontWeight: '600',
     backdropFilter: 'blur(10px)',
   },
+  defaultTemplatesSection: {
+    marginBottom: '25px',
+  },
   templateGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
     gap: '15px',
-    marginBottom: '25px',
+    marginBottom: '20px',
   },
   templateCard: {
     border: '2px solid',
-    borderRadius: '10px',
-    padding: '15px',
+    borderRadius: '12px',
+    padding: '12px',
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    transition: 'all 0.3s ease',
     position: 'relative' as const,
-    backgroundColor: '#fafafa',
+    overflow: 'hidden',
   },
   templatePreview: {
     width: '100%',
-    height: '120px',
-    marginBottom: '10px',
-    borderRadius: '6px',
+    height: '140px',
+    borderRadius: '8px',
     overflow: 'hidden',
     position: 'relative' as const,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   templateImage: {
-    width: '100%',
+    width: '75%',
     height: '100%',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: '#f0f0f0',
+    margin: '0 auto',
+    display: 'block',
   },
   localBadge: {
     position: 'absolute' as const,
@@ -1079,27 +1160,29 @@ const styles = {
   },
   templateInfo: {
     textAlign: 'center' as const,
+    marginTop: '10px',
   },
   templateName: {
     display: 'block',
-    fontSize: '0.95rem',
-    marginBottom: '4px',
-    color: '#2c3e50',
+    fontSize: '0.9rem',
+    color: '#fff',
+    fontWeight: '600',
   },
   templateDesc: {
-    color: '#7f8c8d',
+    color: 'rgba(255, 255, 255, 0.7)',
     fontSize: '0.8rem',
   },
   selectedBadge: {
     position: 'absolute' as const,
     top: '10px',
     right: '10px',
-    backgroundColor: '#3498db',
+    backgroundColor: 'mediumseagreen',
     color: 'white',
-    padding: '3px 8px',
+    padding: '4px 10px',
     borderRadius: '12px',
-    fontSize: '0.7rem',
+    fontSize: '0.75rem',
     fontWeight: 'bold',
+    boxShadow: '0 2px 8px rgba(139, 92, 246, 0.4)',
   },
   customTemplateSection: {
     backgroundColor: 'rgba(15, 12, 41, 0.4)',
@@ -1728,6 +1811,12 @@ if (typeof document !== 'undefined') {
     /* Prevent body scroll when camera modal is open */
     body:has(.image-overlay-app [style*="cameraModal"]) {
       overflow: hidden;
+    }
+
+    /* Template card hover effects */
+    .image-overlay-app [style*="templateCard"]:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
     }
 
     @media (max-width: 768px) {
