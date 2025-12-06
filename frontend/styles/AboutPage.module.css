@@ -1,10 +1,10 @@
 .container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #0f0c29 0%, #0f0e1e 50%, #24243e 100%);
-  overflow: hidden;
+  position: relative;
 }
 
 .header {
@@ -18,6 +18,9 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(139, 92, 246, 0.2);
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .backButton {
@@ -55,9 +58,7 @@
 
 .content {
   flex: 1;
-  overflow-y: auto;
   padding: 20px;
-  -webkit-overflow-scrolling: touch;
 }
 
 .logoSection {

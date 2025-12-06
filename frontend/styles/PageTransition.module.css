@@ -1,9 +1,68 @@
+.transitionContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.pageWrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: right center;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slideInFromRight {
+  animation: slideInFromRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.slideOutToRight {
+  animation: slideOutToRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+  }
+
+  to {
+    transform: translateX(0);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0) scale(1);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  to {
+    transform: translateX(100%) scale(0.95);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Legacy support */
 .pageContainer {
   width: 100%;
   height: 100%;
   animation-duration: 0.3s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   animation-fill-mode: both;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .slideInFromRight {
@@ -19,6 +78,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -30,6 +90,7 @@
     transform: translateX(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -48,6 +109,7 @@
     opacity: 0;
     transform: translateX(10px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import styles from '../../styles/IframePage.module.css';
+import styles from '@/styles/IframePage.module.css';
 
 export default function SchedulePage() {
   const router = useRouter();

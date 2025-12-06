@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import ChatInterface from '../../components/ChatInterface';
+import ChatInterface from '../../../components/ChatInterface';
 
 const mockUser = {
   userId: 'user123',
@@ -12,7 +12,7 @@ const mockUser = {
 
 const mockEvent = {
   _id: '507f1f77bcf86cd799439011',
-  name: 'Indicon 2025',
+  name: 'IEEE INDICON 2025',
   description: 'Annual technology conference',
   startDate: new Date('2025-03-01'),
   endDate: new Date('2025-03-03'),

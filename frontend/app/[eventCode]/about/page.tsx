@@ -13,12 +13,12 @@ export default function AboutPage() {
         <button onClick={() => router.back()} className={styles.backButton}>
           <ArrowLeft size={24} />
         </button>
-        <h1 className={styles.title}>About INDICON 2025</h1>
+        <h1 className={styles.title}>About IEEE INDICON 2025</h1>
       </div>
 
       <div className={styles.content}>
         <div className={styles.logoSection}>
-          <div className={styles.eventLogo}>INDICON 2025</div>
+          <div className={styles.eventLogo}>IEEE INDICON 2025</div>
         </div>
 
         <div className={styles.section}>
@@ -43,7 +43,7 @@ export default function AboutPage() {
               <div>
                 <div className={styles.detailLabel}>Location</div>
                 <div className={styles.detailValue}><b>International Institute of Information Technology</b>
-
+                  <br></br>
                   26/C, Electronics City, Hosur Road
 
                   Bangalore, Karnataka, India - 560100</div>
