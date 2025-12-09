@@ -3,9 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import styles from '@/styles/IframePage.module.css';
+import { useEvent } from '@/contexts/EventContext';
 
 export default function AgendaPage() {
   const router = useRouter();
+  const { eventCode } = useEvent();
 
   return (
     <div className={styles.container}>
@@ -17,7 +19,7 @@ export default function AgendaPage() {
       </div>
       <div className={styles.iframeWrapper}>
         <iframe
-          src="https://www.evynte.com/event/indicon2025/slots"
+          src={`${process.env.NEXT_PUBLIC_SITE_URL}/event/${eventCode || 'indicon2025'}/slots`}
           className={styles.iframe}
           title="Event Slots"
         />

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ClientTemplate from '@/components/ClientTemplate';
+import { EventProvider } from '@/contexts/EventContext';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -26,7 +27,9 @@ export default function RootLayout({
       </head>
       <body>
         <div className="app">
-          <ClientTemplate>{children}</ClientTemplate>
+          <EventProvider>
+            <ClientTemplate>{children}</ClientTemplate>
+          </EventProvider>
         </div>
       </body>
     </html>

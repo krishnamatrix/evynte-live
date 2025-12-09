@@ -71,8 +71,8 @@ export const setupSocketHandlers = (io) => {
             answeredAt: new Date().toISOString()
           });
 
-          // Store to vector DB if it's a general question
-          if (questionType === 'general') {
+          // Store to vector DB if it's a general question AND it's a new AI-generated answer
+          if (questionType === 'general' && aiResult.source === 'ai_generated') {
             const vectorId = await storeQAPair(
               question,
               aiResult.answer,

@@ -63,17 +63,20 @@ CREATE TABLE event_chat_messages (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE EXTENSION IF NOT EXISTS vector;
 -- Q&A embeddings table with vector column for semantic search
 CREATE TABLE qa_embeddings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     event_id UUID REFERENCES events(id) ON DELETE CASCADE,
-    message_id UUID REFERENCES messages(id) ON DELETE CASCADE,
+    message_id UUID REFERENCES event_chat_messages(id) ON DELETE CASCADE,
     question TEXT NOT NULL,
     answer TEXT NOT NULL,
-    embedding vector(1536), -- OpenAI ada-002 embeddings are 1536 dimensions
+    embedding vector(1024),
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+
+
 
 -- Indexes for better query performance
 CREATE INDEX idx_events_organizer ON events(organizer_id);
@@ -122,7 +125,7 @@ CREATE TRIGGER update_qa_embeddings_updated_at BEFORE UPDATE ON qa_embeddings
 -- Function for vector similarity search
 -- Returns similar questions based on cosine similarity
 CREATE OR REPLACE FUNCTION search_similar_questions(
-    query_embedding vector(1536),
+    query_embedding vector(1024),
     event_uuid UUID,
     match_threshold DECIMAL DEFAULT 0.7,
     match_count INT DEFAULT 3

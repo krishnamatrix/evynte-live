@@ -43,6 +43,25 @@ const ChatInterface: React.FC = () => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const socketServiceRef = useRef<any>(null);
 
+  const loadMessages = async () => {
+    try {
+      const response = await messageAPI.getByEvent(event.id, user.id);
+      if (response.data.success) {
+        setMessages(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error loading messages:', error);
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   useEffect(() => {
     setMounted(true);
 
@@ -80,17 +99,6 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const loadMessages = async () => {
-    try {
-      const response = await messageAPI.getByEvent(event.id, user.id);
-      if (response.data.success) {
-        setMessages(response.data.data);
-      }
-    } catch (error) {
-      console.error('Error loading messages:', error);
-    }
-  };
 
   const handleReceiveAnswer = (message) => {
     setMessages(prev => {
@@ -189,10 +197,6 @@ const ChatInterface: React.FC = () => {
         });
       }
     }, 1000);
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const renderMessage = (message) => {

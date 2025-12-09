@@ -21,7 +21,8 @@ import {
   Bookmark,
   QrCode,
   X,
-  LogOut
+  LogOut,
+  Monitor
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import styles from '../styles/HomeScreen.module.css';
@@ -55,6 +56,12 @@ interface Event {
   description?: string;
   venue?: string;
   organizerEmail?: string;
+  liveSettings?: {
+    [key: string]: 'active' | 'coming_soon' | 'disabled';
+  };
+  venueMapHtml?: string;
+  travelInfoHtml?: string;
+  hotelsNearbyHtml?: string;
 }
 
 interface HomeScreenProps {
@@ -85,131 +92,233 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     date: eventDate,
     code: eventCode as string
   });
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      // Fetch user role if user is logged in
+      if (user) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single();
+        console.log('Fetched user role:', profile?.role);
+        setUserRole(profile?.role || null);
+      }
     };
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
+      
+      // Fetch role when auth state changes
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        setUserRole(profile?.role || null);
+      } else {
+        setUserRole(null);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const activeAppItems: AppItem[] = [
-    // {
-    //   id: 'chat',
-    //   name: 'Chat',
-    //   icon: MessageCircle,
-    //   path: `${eventCode}/chat`,
-    //   color: '#4CAF50'
-    // },
+  // Dynamic active app items based on user login status, role, and event settings
+  const getActiveAppItems = (): AppItem[] => {
+    const items: AppItem[] = [];
+    const settings = event?.liveSettings || {};
     
-    {
-      id: 'agenda',
-      name: 'Agenda',
-      icon: ClipboardList,
-      path: `${eventCode}/agenda`,
-      color: '#FF5722'
-    },
-    {
-      id: 'schedule',
-      name: 'Schedule',
-      icon: Calendar,
-      path: `${eventCode}/schedule`,
-      color: '#2196F3'
-    },{
-      id: 'photobooth',
-      name: 'Photobooth',
-      icon: CameraIcon,
-      path: `${eventCode}/photobooth`,
-      color: '#607D8B'
-    },
-    {
-      id: 'organizers',
-      name: 'Organizers',
-      icon: Users,
-      path: `${eventCode}/organizer`,
-      color: '#4CAF50'
-    },
-    {
-      id: 'about',
-      name: 'About',
-      icon: Info,
-      path: `${eventCode}/about`,
-      color: '#667eea'
+    // Helper to check if feature is active
+    const isActive = (key: string) => settings[key] === 'active' || !settings[key];
+    
+    // QR Code - only for logged in users and if enabled
+    if (user && isActive('qr')) {
+      items.push({
+        id: 'qr',
+        name: 'My QR',
+        icon: QrCode,
+        path: `${eventCode}/qr-code`,
+        color: '#26C6DA'
+      });
     }
-  ];
+    
+    // Kiosks Live - only for ADMIN users and if enabled
+    if (user && userRole === 'ADMIN' && isActive('kiosksLive')) {
+      items.push({
+        id: 'kiosks-live',
+        name: 'Kiosks Live',
+        icon: Monitor,
+        path: `${eventCode}/kiosks-live`,
+        color: '#FF9800'
+      });
+    }
+    
+    // Common items - only add if active
+    if (isActive('agenda')) {
+      items.push({
+        id: 'agenda',
+        name: 'Agenda',
+        icon: ClipboardList,
+        path: `${eventCode}/agenda`,
+        color: '#FF5722'
+      });
+    }
+    
+    if (isActive('schedule')) {
+      items.push({
+        id: 'schedule',
+        name: 'Schedule',
+        icon: Calendar,
+        path: `${eventCode}/schedule`,
+        color: '#2196F3'
+      });
+    }
+    
+    if (isActive('photobooth')) {
+      items.push({
+        id: 'photobooth',
+        name: 'Photobooth',
+        icon: CameraIcon,
+        path: `${eventCode}/photobooth`,
+        color: '#607D8B'
+      });
+    }
+    
+    if (isActive('organizers')) {
+      items.push({
+        id: 'organizers',
+        name: 'Organizers',
+        icon: Users,
+        path: `${eventCode}/organizer`,
+        color: '#4CAF50'
+      });
+    }
+    
+    if (isActive('about')) {
+      items.push({
+        id: 'about',
+        name: 'About',
+        icon: Info,
+        path: `${eventCode}/about`,
+        color: '#667eea'
+      });
+    }
+    
+    if (isActive('venueMap')) {
+      items.push({
+        id: 'venueMap',
+        name: 'Venue Map',
+        icon: MapPin,
+        path: `${eventCode}/venue-map`,
+        color: '#66BB6A'
+      });
+    }
+    
+    if (isActive('travelInfo')) {
+      items.push({
+        id: 'travelInfo',
+        name: 'Travel Info',
+        icon: Bookmark,
+        path: `${eventCode}/travel-info`,
+        color: '#42A5F5'
+      });
+    }
+    
+    if (isActive('hotelsNearby')) {
+      items.push({
+        id: 'hotelsNearby',
+        name: 'Hotels Nearby',
+        icon: Bookmark,
+        path: `${eventCode}/hotels-nearby`,
+        color: '#FFA726'
+      });
+    }
+    
+    return items;
+  };
 
-  const comingSoonItems = [
-    {
-      id: 'networking',
-      name: 'Networking',
-      icon: Wifi,
-      path: `${eventCode}/networking`,
-      color: '#9C27B0'
-    }, {
-      id: 'chat',
-      name: 'Chat',
-      icon: MessageCircle,
-      path: `${eventCode}/chat`,
-      color: '#4CAF50'
-    },
-    /*{
-      id: 'speakers',
-      name: 'Speakers',
-      icon: Mic2,
-      path: `${eventCode}/speakers`,
-      color: '#FF6B9D'
-    },
-    {
-      id: 'workshops',
-      name: 'Workshops',
-      icon: GraduationCap,
-      path: `${eventCode}/workshops`,
-      color: '#FFA726'
-    },*/
-    {
-      id: 'venue',
-      name: 'Venue Map',
-      icon: MapPin,
-      path: `${eventCode}/venue`,
-      color: '#66BB6A'
-    },
-    {
-      id: 'notifications',
-      name: 'Updates',
-      icon: Bell,
-      path: `${eventCode}/notifications`,
-      color: '#42A5F5'
-    },
-    {
-      id: 'qr',
-      name: 'My QR',
-      icon: QrCode,
-      path: `${eventCode}/qr-code`,
-      color: '#26C6DA'
+  // Get coming soon items based on event settings
+  const getComingSoonItems = (): AppItem[] => {
+    const items: AppItem[] = [];
+    const settings = event?.liveSettings || {};
+    
+    // Helper to check if feature is coming soon
+    const isComingSoon = (key: string) => settings[key] === 'coming_soon';
+    
+    if (isComingSoon('networking')) {
+      items.push({
+        id: 'networking',
+        name: 'Networking',
+        icon: Wifi,
+        path: `${eventCode}/networking`,
+        color: '#9C27B0'
+      });
     }
-    /*{
-      id: 'bookmarks',
-      name: 'Bookmarks',
-      icon: Bookmark,
-      path: `${eventCode}/bookmarks`,
-      color: '#AB47BC'
-    },
-    ,
-    {
-      id: 'settings',
-      name: 'Settings',
-      icon: Settings,
-      path: `${eventCode}/settings`,
-      color: '#607D8B'
-    }*/
-  ];
+    
+    if (isComingSoon('chat')) {
+      items.push({
+        id: 'chat',
+        name: 'Chat',
+        icon: MessageCircle,
+        path: `${eventCode}/chat`,
+        color: '#4CAF50'
+      });
+    }
+    
+    if (isComingSoon('venueMap')) {
+      items.push({
+        id: 'venueMap',
+        name: 'Venue Map',
+        icon: MapPin,
+        path: `${eventCode}/venue-map`,
+        color: '#66BB6A'
+      });
+    }
+    
+    if (isComingSoon('travelInfo')) {
+      items.push({
+        id: 'travelInfo',
+        name: 'Travel Info',
+        icon: Bookmark,
+        path: `${eventCode}/travel-info`,
+        color: '#42A5F5'
+      });
+    }
+    
+    if (isComingSoon('hotelsNearby')) {
+      items.push({
+        id: 'hotelsNearby',
+        name: 'Hotels Nearby',
+        icon: Bookmark,
+        path: `${eventCode}/hotels-nearby`,
+        color: '#FFA726'
+      });
+    }
+    
+    if (isComingSoon('notifications')) {
+      items.push({
+        id: 'notifications',
+        name: 'Updates',
+        icon: Bell,
+        path: `${eventCode}/notifications`,
+        color: '#42A5F5'
+      });
+    }
+    
+    return items;
+  };
+
+  const activeAppItems = getActiveAppItems();
+  const comingSoonItems = getComingSoonItems();
 
   const handleNavigation = (path: string) => {
     if (navigating) return;
@@ -331,9 +440,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        {/* <button className={styles.loginButton} onClick={handleLoginClick}>
+        <button className={styles.loginButton} onClick={handleLoginClick}>
           {user ? 'Logout' : 'Login'}
-        </button> */}
+        </button>
         <div className={styles.logoWrapper}>
           <Image
             src="/assets/evynte_logo.png"
@@ -367,28 +476,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         })}
       </div>
 
-      <div className={styles.divider}>
-        <span className={styles.dividerText}>Coming Soon</span>
-      </div>
+      {comingSoonItems.length > 0 && (
+        <>
+          <div className={styles.divider}>
+            <span className={styles.dividerText}>Coming Soon</span>
+          </div>
 
-      <div className={styles.appGrid}>
-        {comingSoonItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              className={`${styles.appItem} ${styles.appItemDisabled}`}
-              onClick={() => handleNavigation(item.path)}
-              style={{ '--app-color': item.color } as React.CSSProperties}
-            >
-              <div className={styles.iconWrapper}>
-                <Icon className={styles.icon} size={32} />
-              </div>
-              <span className={styles.appName}>{item.name}</span>
-            </button>
-          );
-        })}
-      </div>
+          <div className={styles.appGrid}>
+            {comingSoonItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  className={`${styles.appItem} ${styles.appItemDisabled}`}
+                  onClick={() => handleNavigation(item.path)}
+                  style={{ '--app-color': item.color } as React.CSSProperties}
+                >
+                  <div className={styles.iconWrapper}>
+                    <Icon className={styles.icon} size={32} />
+                  </div>
+                  <span className={styles.appName}>{item.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
 
       <div className={styles.footer}>
         <p>&nbsp;</p>

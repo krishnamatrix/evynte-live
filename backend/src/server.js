@@ -6,14 +6,20 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 import { connectDB } from './config/database.js';
 import setupSocketHandlers from './sockets/chatSocket.js';
 import eventRoutes from './routes/events.js';
 import messageRoutes from './routes/messages.js';
 
-// Load environment variables
-dotenv.config();
+// Get directory name for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables from backend/.env.local
+dotenv.config({ path: join(__dirname, '..', '.env.local') });
 
 // Initialize Express app
 const app = express();
@@ -72,6 +78,7 @@ const startServer = async () => {
     httpServer.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV}`);
+      console.log('USE_OLLAMA env:', process.env.USE_OLLAMA);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
