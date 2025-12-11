@@ -37,7 +37,11 @@ export default function AboutPage() {
       } else if (eventData) {
         setEventName(eventData.event_name || 'Event');
         setEventDescription(eventData.event_description || '');
-        setVenueInfo(eventData.event_venues);
+        // event_venues is an array, take the first item if available
+        const venues = eventData.event_venues;
+        if (Array.isArray(venues) && venues.length > 0) {
+          setVenueInfo(venues[0]);
+        }
       }
     } catch (err) {
       console.error('Error loading event description:', err);
@@ -126,21 +130,21 @@ export default function AboutPage() {
               Venue Information
             </h2>
             
-            {venueInfo.name && (
+            {venueInfo.venue_name && (
               <div style={{ marginBottom: '15px' }}>
                 <strong style={{ color: 'rgba(139, 92, 246, 0.9)' }}>Venue:</strong>
-                <div style={{ marginTop: '5px' }}>{venueInfo.name}</div>
+                <div style={{ marginTop: '5px' }}>{venueInfo.venue_name}</div>
               </div>
             )}
             
-            {(venueInfo.address || venueInfo.city || venueInfo.state || venueInfo.country) && (
+            {(venueInfo.venue_address || venueInfo.venue_city || venueInfo.venue_state || venueInfo.venue_country) && (
               <div style={{ marginBottom: '15px' }}>
                 <strong style={{ color: 'rgba(139, 92, 246, 0.9)' }}>Address:</strong>
                 <div style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>
-                  {venueInfo.address && <div>{venueInfo.address}</div>}
-                  {(venueInfo.city || venueInfo.state || venueInfo.country) && (
+                  {venueInfo.venue_address && <div>{venueInfo.venue_address}</div>}
+                  {(venueInfo.venue_city || venueInfo.venue_state || venueInfo.venue_country) && (
                     <div>
-                      {[venueInfo.city, venueInfo.state, venueInfo.country]
+                      {[venueInfo.venue_city, venueInfo.venue_state, venueInfo.venue_country]
                         .filter(Boolean)
                         .join(', ')}
                     </div>
@@ -149,10 +153,10 @@ export default function AboutPage() {
               </div>
             )}
             
-            {venueInfo.zip_code && (
+            {venueInfo.venue_zipcode && (
               <div style={{ marginBottom: '15px' }}>
                 <strong style={{ color: 'rgba(139, 92, 246, 0.9)' }}>Zip Code:</strong>
-                <div style={{ marginTop: '5px' }}>{venueInfo.zip_code}</div>
+                <div style={{ marginTop: '5px' }}>{venueInfo.venue_zipcode}</div>
               </div>
             )}
           </div>
