@@ -402,7 +402,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         .from('event_user_registrations')
         .select('id')
         .eq('email_address', loginEmail)
-        .eq('event_id', '77797ebf-a617-49f8-beb8-baec6ff21ec9')
+        .eq('event_id', event.id)
         .limit(1)
         .maybeSingle();
 
