@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Mic2, MapPin, Clock, Linkedin, Twitter, Globe } from 'lucide-react';
 import styles from '@/styles/PlaceholderPage.module.css';
+import { ArrowLeftIcon, ClockIcon, GlobeIcon, LinkedinLogoIcon, MapPinIcon, MicrophoneIcon, TwitterLogoIcon } from '@phosphor-icons/react';
 
 const mockSpeakers = [
   {
@@ -82,7 +82,7 @@ export default function SpeakersPage() {
           onClick={() => router.back()}
           aria-label="Go back"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeftIcon size={24} />
         </button>
         <h1 className={styles.title}>Speakers</h1>
       </div>
@@ -153,7 +153,7 @@ export default function SpeakersPage() {
                 </p>
               </div>
               
-              <Mic2 size={24} color="rgba(139, 92, 246, 0.8)" />
+              <MicrophoneIcon size={24} color="rgba(139, 92, 246, 0.8)" />
             </div>
 
             {selectedSpeaker === speaker.id && (
@@ -187,13 +187,13 @@ export default function SpeakersPage() {
                   </h4>
                   <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Clock size={16} color="rgba(255, 255, 255, 0.7)" />
+                      <ClockIcon size={16} color="rgba(255, 255, 255, 0.7)" />
                       <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
                         {speaker.time}
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <MapPin size={16} color="rgba(255, 255, 255, 0.7)" />
+                      <MapPinIcon size={16} color="rgba(255, 255, 255, 0.7)" />
                       <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
                         {speaker.venue}
                       </span>
@@ -215,7 +215,7 @@ export default function SpeakersPage() {
                       gap: '6px',
                       fontSize: '13px'
                     }}>
-                      <Linkedin size={16} />
+                      <LinkedinLogoIcon size={16} />
                       LinkedIn
                     </button>
                   )}
@@ -232,7 +232,7 @@ export default function SpeakersPage() {
                       gap: '6px',
                       fontSize: '13px'
                     }}>
-                      <Twitter size={16} />
+                      <TwitterLogoIcon size={16} />
                       Twitter
                     </button>
                   )}
@@ -249,7 +249,7 @@ export default function SpeakersPage() {
                       gap: '6px',
                       fontSize: '13px'
                     }}>
-                      <Globe size={16} />
+                      <GlobeIcon size={16} />
                       Website
                     </button>
                   )}

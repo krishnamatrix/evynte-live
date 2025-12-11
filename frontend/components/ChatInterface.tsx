@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { MessageCircle, Send, Loader2, User, Bot, ArrowLeft } from 'lucide-react';
+import { ChatCircle, PaperPlaneRight, CircleNotch, User, Robot, ArrowLeft } from '@phosphor-icons/react';
 import { formatDistanceToNow } from 'date-fns';
 import getSocketService from '../lib/socket';
 import { messageAPI } from '../lib/api';
@@ -228,7 +228,7 @@ const ChatInterface: React.FC = () => {
         {hasAnswer && (
           <div className={`${styles.message} ${styles.aiMessage}`}>
             <div className={styles.messageAvatar}>
-              <Bot size={20} />
+              <Robot size={20} />
             </div>
             <div className={styles.messageContent}>
               <div className={styles.messageHeader}>
@@ -252,7 +252,7 @@ const ChatInterface: React.FC = () => {
         {/* Pending Status */}
         {!hasAnswer && message.status === 'escalated' && (
           <div className={`${styles.message} ${styles.statusMessage}`}>
-            <Loader2 className={styles.spinning} size={16} />
+            <CircleNotch className={styles.spinning} size={16} />
             <span>Waiting for organizer response...</span>
           </div>
         )}
@@ -278,7 +278,7 @@ const ChatInterface: React.FC = () => {
         >
           <ArrowLeft size={24} />
         </button>
-        <MessageCircle size={24} />
+        <ChatCircle size={24} />
         <div className={styles.chatHeaderInfo}>
           <h2>{event.name}</h2>
           <p>Ask questions and get instant AI-powered responses</p>
@@ -290,7 +290,7 @@ const ChatInterface: React.FC = () => {
 
         {typingUsers.length > 0 && (
           <div className={styles.typingIndicator}>
-            <Loader2 className={styles.spinning} size={16} />
+            <CircleNotch className={styles.spinning} size={16} />
             <span>{typingUsers.map(u => u.userName).join(', ')} typing...</span>
           </div>
         )}
@@ -334,7 +334,7 @@ const ChatInterface: React.FC = () => {
             className={styles.chatSendButton}
             disabled={!inputMessage.trim() || isLoading}
           >
-            {isLoading ? <Loader2 className={styles.spinning} size={20} /> : <Send size={20} />}
+            {isLoading ? <CircleNotch className={styles.spinning} size={20} /> : <PaperPlaneRight size={20} />}
           </button>
         </div>
       </form>

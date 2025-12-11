@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, QrCode, Download, Share2 } from 'lucide-react';
 import styles from '@/styles/PlaceholderPage.module.css';
 import { useEventData } from '@/hooks/useEventData';
+import { ArrowLeftIcon, DownloadIcon, QrCodeIcon, ShareIcon } from '@phosphor-icons/react';
 
 export default function QRCodePage() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function QRCodePage() {
           onClick={() => router.back()}
           aria-label="Go back"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeftIcon size={24} />
         </button>
         <h1 className={styles.title}>My QR Code</h1>
       </div>
@@ -60,7 +60,7 @@ export default function QRCodePage() {
             justifyContent: 'center',
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)'
           }}>
-            <QrCode size={160} color="#0f0c29" />
+            <QrCodeIcon size={160} color="#0f0c29" />
           </div>
 
           <h3 style={{ 
@@ -115,7 +115,7 @@ export default function QRCodePage() {
             gap: '8px',
             transition: 'all 0.2s'
           }}>
-            <Download size={18} />
+            <DownloadIcon size={18} />
             Download
           </button>
           <button style={{
@@ -134,7 +134,7 @@ export default function QRCodePage() {
             gap: '8px',
             transition: 'all 0.2s'
           }}>
-            <Share2 size={18} />
+            <ShareIcon size={18} />
             Share
           </button>
         </div>

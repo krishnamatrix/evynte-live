@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from '@/styles/PlaceholderPage.module.css';
+import { ArrowLeftIcon } from '@phosphor-icons/react';
 
 export default function HotelsNearbyPage() {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function HotelsNearbyPage() {
       <div className={styles.container}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={() => router.back()}>
-            <ArrowLeft size={24} />
+            <ArrowLeftIcon size={24} />
           </button>
           <h1 className={styles.title}>Hotels Nearby</h1>
         </div>
@@ -74,7 +74,7 @@ export default function HotelsNearbyPage() {
           onClick={() => router.back()}
           aria-label="Go back"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeftIcon size={24} />
         </button>
         <h1 className={styles.title}>Hotels Nearby</h1>
       </div>

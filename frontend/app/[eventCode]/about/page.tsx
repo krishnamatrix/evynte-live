@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@phosphor-icons/react';
 import { supabase } from '@/lib/supabaseClient';
 import { useEvent } from '@/contexts/EventContext';
 import styles from '@/styles/PlaceholderPage.module.css';

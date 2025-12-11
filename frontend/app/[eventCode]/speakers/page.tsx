@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Mic2, MapPin, Clock, Linkedin, Twitter, Globe } from 'lucide-react';
+import { ArrowLeft, Microphone, MapPin, Clock, LinkedinLogo, TwitterLogo, Globe, MicrophoneIcon, LinkedinLogoIcon, TwitterLogoIcon } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockSpeakers = [
@@ -153,7 +153,7 @@ export default function SpeakersPage() {
                 </p>
               </div>
 
-              <Mic2 size={24} color="rgba(139, 92, 246, 0.8)" />
+              <MicrophoneIcon size={24} color="rgba(139, 92, 246, 0.8)" />
             </div>
 
             {selectedSpeaker === speaker.id && (
@@ -215,7 +215,7 @@ export default function SpeakersPage() {
                       gap: '6px',
                       fontSize: '13px'
                     }}>
-                      <Linkedin size={16} />
+                      <LinkedinLogoIcon size={16} />
                       LinkedIn
                     </button>
                   )}
@@ -232,7 +232,7 @@ export default function SpeakersPage() {
                       gap: '6px',
                       fontSize: '13px'
                     }}>
-                      <Twitter size={16} />
+                      <TwitterLogoIcon size={16} />
                       Twitter
                     </button>
                   )}

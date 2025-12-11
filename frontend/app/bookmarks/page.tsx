@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Bookmark, Clock, MapPin, Trash2, GraduationCap, Mic2 } from 'lucide-react';
+import { ArrowLeft, Bookmark, Clock, MapPin, Trash, GraduationCap, MicrophoneIcon } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockBookmarks = [
@@ -13,7 +13,7 @@ const mockBookmarks = [
     speaker: 'Dr. Sarah Chen',
     time: '10:00 AM - 11:00 AM',
     venue: 'Main Hall A',
-    icon: Mic2,
+    icon: MicrophoneIcon,
     color: '#8b5cf6'
   },
   {
@@ -33,7 +33,7 @@ const mockBookmarks = [
     speaker: 'Marcus Johnson',
     time: '11:30 AM - 12:30 PM',
     venue: 'Tech Arena',
-    icon: Mic2,
+    icon: MicrophoneIcon,
     color: '#8b5cf6'
   },
   {
@@ -146,7 +146,7 @@ export default function BookmarksPage() {
                           transition: 'all 0.2s'
                         }}
                       >
-                        <Trash2 size={14} />
+                        <Trash size={14} />
                       </button>
                     </div>
                     

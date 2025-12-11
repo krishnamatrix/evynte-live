@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, CheckCircle } from 'lucide-react';
+import { ArrowLeft, PaperPlaneRight, CheckCircle, Download } from '@phosphor-icons/react';
 import { useEvent } from '@/contexts/EventContext';
 import { supabase } from '@/lib/supabaseClient';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -142,22 +142,51 @@ export default function FeedbackPage() {
             <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               Your feedback has been submitted successfully.
             </p>
-            <button
-              onClick={() => router.back()}
-              style={{
-                marginTop: '20px',
-                padding: '12px 24px',
-                background: '#8b5cf6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              Back to Home
-            </button>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px', width: '100%' }}>
+              <button
+                onClick={() => router.push(`/${eventCode}/certificate`)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px 24px',
+                  background: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background 0.3s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#45a049'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#4CAF50'}
+              >
+                <Download size={20} />
+                Download Certificate
+              </button>
+              
+              <button
+                onClick={() => router.back()}
+                style={{
+                  padding: '12px 24px',
+                  background: '#8b5cf6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background 0.3s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#7c3aed'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#8b5cf6'}
+              >
+                Back to Home
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -234,7 +263,14 @@ export default function FeedbackPage() {
         padding: '20px'
       }}>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form 
+            onSubmit={handleSubmit(onSubmit)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.target instanceof HTMLElement && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+              }
+            }}
+          >
             <div
               style={{
                 background: 'rgba(30, 27, 75, 0.6)',
@@ -291,7 +327,7 @@ export default function FeedbackPage() {
                   <>Submitting...</>
                 ) : (
                   <>
-                    <Send size={20} />
+                    <PaperPlaneRight size={20} />
                     Submit Feedback
                   </>
                 )}

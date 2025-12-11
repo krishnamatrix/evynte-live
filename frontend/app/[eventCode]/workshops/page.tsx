@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, GraduationCap, Clock, MapPin, Users, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Clock, MapPin, Users, CheckCircle, CheckCircleIcon } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 const mockWorkshops = [
@@ -218,7 +218,7 @@ export default function WorkshopsPage() {
                   transition: 'all 0.2s'
                 }}
               >
-                {isRegistered && <CheckCircle2 size={18} />}
+                {isRegistered && <CheckCircleIcon size={18} />}
                 {isRegistered ? 'Registered' : isFull ? 'Full' : 'Register'}
               </button>
             </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin } from '@phosphor-icons/react';
 import { useEvent } from '@/contexts/EventContext';
 import styles from '@/styles/PlaceholderPage.module.css';
 import RichHTMLContent from '@/util/rich-html-content';

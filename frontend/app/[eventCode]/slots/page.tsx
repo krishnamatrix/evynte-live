@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 export default function SlotsPage() {

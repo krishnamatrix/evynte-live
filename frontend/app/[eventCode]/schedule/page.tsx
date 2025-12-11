@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@phosphor-icons/react';
 import styles from '@/styles/IframePage.module.css';
 import { useEvent } from '@/contexts/EventContext';
 

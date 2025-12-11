@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, UserCheck } from 'lucide-react';
+import { ArrowLeft, UserCheck } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 export default function CheckInPage() {

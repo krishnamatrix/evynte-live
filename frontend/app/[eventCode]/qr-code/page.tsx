@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download } from '@phosphor-icons/react';
 import { supabase } from '@/lib/supabaseClient';
 import QRCode from 'qrcode';
 import styles from '@/styles/PlaceholderPage.module.css';

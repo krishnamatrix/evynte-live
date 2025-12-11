@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, RefreshCw, Monitor } from 'lucide-react';
+import { ArrowLeft, ArrowsClockwise, Monitor } from '@phosphor-icons/react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from './KiosksLive.module.css';
 
@@ -171,7 +171,7 @@ export default function KiosksLivePage() {
         <h1 className={styles.title}>Kiosks Live</h1>
         {selectedType && (
           <button onClick={handleRefresh} className={styles.refreshButton}>
-            <RefreshCw size={20} />
+            <ArrowsClockwise size={20} />
           </button>
         )}
       </div>

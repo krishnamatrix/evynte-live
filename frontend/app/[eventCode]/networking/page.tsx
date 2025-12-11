@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Wifi } from 'lucide-react';
+import { ArrowLeft, WifiHigh, WifiMediumIcon } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 
 export default function NetworkingPage() {
@@ -16,7 +16,7 @@ export default function NetworkingPage() {
         <h1 className={styles.title}>Networking</h1>
       </div>
       <div className={styles.content}>
-        <Wifi size={64} className={styles.icon} />
+        <WifiMediumIcon size={64} className={styles.icon} />
         <h2>Coming Soon</h2>
         <p>Connect with other attendees</p>
       </div>

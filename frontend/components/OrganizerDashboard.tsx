@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { ArrowLeft, Envelope, EnvelopeIcon } from '@phosphor-icons/react';
 import styles from '../styles/OrganizerDashboard.module.css';
 
 interface OrganizerDashboardProps {
@@ -35,14 +35,14 @@ const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({ event }) => {
       <div className={styles.contactContent}>
         <div className={styles.contactCard}>
           <div className={styles.contactIcon}>
-            <Mail size={48} />
+            <EnvelopeIcon size={48} />
           </div>
           <h2 className={styles.contactTitle}>Contact Us</h2>
           <p className={styles.contactDescription}>
             For any questions or assistance, please reach out to our organizing team
           </p>
           <a href={`mailto:${contactEmail}`} className={styles.emailButton}>
-            <Mail size={20} />
+            <Envelope size={20} />
             <span>{contactEmail}</span>
           </a>
         </div>

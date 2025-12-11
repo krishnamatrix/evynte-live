@@ -3,29 +3,30 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { CameraIcon, LucideIcon } from 'lucide-react';
 import {
-  MessageCircle,
-  Calendar,
+  Camera,
+  ChatCircle,
+  CalendarBlank,
   Clock,
   Users,
   UserCheck,
-  Settings,
-  Wifi,
-  ClipboardList,
+  Gear,
+  WifiHigh,
+  ClipboardText,
   Info,
-  Mic2,
+  Microphone,
   GraduationCap,
   MapPin,
   Bell,
   Bookmark,
   QrCode,
   X,
-  LogOut,
+  SignOut,
   Monitor,
-  Map,
-  MessageSquare
-} from 'lucide-react';
+  MapTrifold,
+  ChatTeardropText,
+  Icon
+} from '@phosphor-icons/react';
 import { supabase } from '../lib/supabaseClient';
 import styles from '../styles/HomeScreen.module.css';
 import { useEffect } from 'react';
@@ -33,9 +34,10 @@ import { useEffect } from 'react';
 interface AppItem {
   id: string;
   name: string;
-  icon: LucideIcon;
+  icon: Icon;
   path: string;
   color: string;
+  requiresAuth?: boolean;
 }
 
 interface User {
@@ -167,7 +169,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'agenda',
         name: 'Agenda',
-        icon: ClipboardList,
+        icon: ClipboardText,
         path: `${eventCode}/agenda`,
         color: '#FF5722'
       });
@@ -177,7 +179,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'schedule',
         name: 'Schedule',
-        icon: Calendar,
+        icon: CalendarBlank,
         path: `${eventCode}/schedule`,
         color: '#2196F3'
       });
@@ -187,7 +189,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'photobooth',
         name: 'Photobooth',
-        icon: CameraIcon,
+        icon: Camera,
         path: `${eventCode}/photobooth`,
         color: '#607D8B'
       });
@@ -247,9 +249,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'feedback',
         name: 'Feedback',
-        icon: MessageSquare,
+        icon: ChatTeardropText,
         path: `${eventCode}/feedback`,
-        color: '#FF6B6B'
+        color: '#FF6B6B',
+        requiresAuth: true
       });
     }
  
@@ -268,7 +271,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'networking',
         name: 'Networking',
-        icon: Wifi,
+        icon: WifiHigh,
         path: `${eventCode}/networking`,
         color: '#9C27B0'
       });
@@ -278,7 +281,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       items.push({
         id: 'chat',
         name: 'Chat',
-        icon: MessageCircle,
+        icon: ChatCircle,
         path: `${eventCode}/chat`,
         color: '#4CAF50'
       });
@@ -330,8 +333,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   const activeAppItems = getActiveAppItems();
   const comingSoonItems = getComingSoonItems();
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string, requiresAuth: boolean = false) => {
     if (navigating) return;
+    
+    // Check if authentication is required for this feature
+    if (requiresAuth && !user) {
+      setAuthError('Please login to access this feature');
+      setIsLoginModalOpen(true);
+      return;
+    }
     
     setNavigating(true);
     // Small delay to show the tap animation
@@ -474,7 +484,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               key={item.id}
               className={styles.appItem}
-              onClick={() => handleNavigation(item.path)}
+              onClick={() => handleNavigation(item.path, item.requiresAuth)}
               style={{ '--app-color': item.color } as React.CSSProperties}
             >
               <div className={styles.iconWrapper}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Bell, Clock, AlertCircle, Info, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Bell, Clock, WarningCircle, Info, CheckCircle, WarningIcon } from '@phosphor-icons/react';
 import styles from '@/styles/PlaceholderPage.module.css';
 import { useEventData } from '@/hooks/useEventData';
 
@@ -12,7 +12,7 @@ const mockNotifications = [
     title: 'Venue Change',
     message: 'AI Workshop moved to Main Hall B',
     time: '5 mins ago',
-    icon: AlertCircle,
+    icon: WarningIcon,
     color: '#EF5350'
   },
   {

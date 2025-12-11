@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, GraduationCap, Clock, MapPin, Users, CheckCircle2 } from 'lucide-react';
 import styles from '@/styles/PlaceholderPage.module.css';
+import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, MapPinIcon, UsersIcon } from '@phosphor-icons/react';
 
 const mockWorkshops = [
   {
@@ -85,7 +85,7 @@ export default function WorkshopsPage() {
           onClick={() => router.back()}
           aria-label="Go back"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeftIcon size={24} />
         </button>
         <h1 className={styles.title}>Workshops</h1>
       </div>
@@ -125,7 +125,7 @@ export default function WorkshopsPage() {
                   }}>
                     {workshop.title}
                   </h3>
-                  <GraduationCap size={24} color="rgba(139, 92, 246, 0.8)" />
+                  <GraduationCapIcon size={24} color="rgba(139, 92, 246, 0.8)" />
                 </div>
                 
                 <p style={{ 
@@ -174,19 +174,19 @@ export default function WorkshopsPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Clock size={16} color="rgba(255, 255, 255, 0.6)" />
+                  <ClockIcon size={16} color="rgba(255, 255, 255, 0.6)" />
                   <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
                     {workshop.time}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <MapPin size={16} color="rgba(255, 255, 255, 0.6)" />
+                  <MapPinIcon size={16} color="rgba(255, 255, 255, 0.6)" />
                   <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
                     {workshop.venue}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Users size={16} color={isFull ? '#EF5350' : 'rgba(255, 255, 255, 0.6)'} />
+                  <UsersIcon size={16} color={isFull ? '#EF5350' : 'rgba(255, 255, 255, 0.6)'} />
                   <span style={{ fontSize: '13px', color: isFull ? '#EF5350' : 'rgba(255, 255, 255, 0.7)' }}>
                     {workshop.registered} / {workshop.seats} seats
                   </span>
@@ -218,7 +218,7 @@ export default function WorkshopsPage() {
                   transition: 'all 0.2s'
                 }}
               >
-                {isRegistered && <CheckCircle2 size={18} />}
+                {isRegistered && <CheckCircleIcon size={18} />}
                 {isRegistered ? 'Registered' : isFull ? 'Full' : 'Register'}
               </button>
             </div>
