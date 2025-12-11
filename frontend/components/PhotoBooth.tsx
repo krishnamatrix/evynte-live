@@ -230,7 +230,6 @@ function PhotoBooth() {
   };
 
   const processImage = useCallback(async (file) => {
-    console.log("Processing image with template:", templateLink);
     const validationError = validateFile(file);
     if (validationError) {
       setError(validationError);

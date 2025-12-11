@@ -72,7 +72,6 @@ export default function EventLandingPage() {
           `)
           .eq('event_code', eventCode)
           .single();
-        console.log('Fetched event data:', eventData, 'Error:', eventError);
         if (eventError) {
           console.error('Error fetching event:', eventError);
         } else if (eventData) {
@@ -99,8 +98,6 @@ export default function EventLandingPage() {
             .eq('event_id', eventData.id)
             .single();
 
-          console.log('Fetched live settings:', liveSettings, 'Error:', settingsError);
-
           // Parse live settings into a usable format based on enabled and coming_soon flags
           let parsedSettings: { [key: string]: 'active' | 'coming_soon' | 'disabled' } = {};
           if (liveSettings && !settingsError) {
@@ -123,11 +120,11 @@ export default function EventLandingPage() {
               venueMap: getStatus(liveSettings.venue_map_enabled, liveSettings.venue_map_coming_soon),
               travelInfo: getStatus(liveSettings.travel_info_enabled, liveSettings.travel_info_coming_soon),
               hotelsNearby: getStatus(liveSettings.hotels_nearby_enabled, liveSettings.hotels_nearby_coming_soon),
+              feedback: getStatus(liveSettings.feedback_enabled, liveSettings.feedback_coming_soon),
               notifications: getStatus(false, false), // Not in settings, default to disabled
               kiosksLive: getStatus(liveSettings.live_kiosk_scanning_enabled, liveSettings.live_kiosk_scanning_coming_soon),
             };
           }
-          console.log('Parsed live settings:', parsedSettings);
           setEvent({
             id: eventData.id,
             name: eventData.event_name || 'Event',
@@ -149,7 +146,6 @@ export default function EventLandingPage() {
             ...venues[0],
             venueMapHtml: liveSettings?.venue_map_html || ''
           } : null;
-          console.log('Setting event data in context with venue:', venueData);
           
           setEventData(
             eventData.id,

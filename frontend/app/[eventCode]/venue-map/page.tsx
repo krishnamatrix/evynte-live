@@ -15,7 +15,6 @@ export default function VenueMapPage() {
     useEffect(() => {
         setLoading(false);
     }, []);
-    console.log('Venue Info:', venueInfo);
     if (loading) {
         return (
             <div className={styles.container}>

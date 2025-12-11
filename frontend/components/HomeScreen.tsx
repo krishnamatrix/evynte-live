@@ -23,7 +23,8 @@ import {
   X,
   LogOut,
   Monitor,
-  Map
+  Map,
+  MessageSquare
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import styles from '../styles/HomeScreen.module.css';
@@ -139,7 +140,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     const settings = event?.liveSettings || {};
     // Helper to check if feature is active
     const isActive = (key: string) => settings[key] === 'active' || !settings[key];
-    console.log('Event venueMap settings:', isActive('venueMap'));
     // QR Code - only for logged in users and if enabled
     if (user && isActive('qr')) {
       items.push({
@@ -240,6 +240,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         icon: Bookmark,
         path: `${eventCode}/hotels-nearby`,
         color: '#FFA726'
+      });
+    }
+    
+    if (isActive('feedback')) {
+      items.push({
+        id: 'feedback',
+        name: 'Feedback',
+        icon: MessageSquare,
+        path: `${eventCode}/feedback`,
+        color: '#FF6B6B'
       });
     }
  
