@@ -70,13 +70,35 @@ export default function FeedbackPage() {
   const onSubmit = async (formData: any) => {
     setSubmitting(true);
     try {
-      // Save feedback response
+      // Get fields array
+      let fields = feedbackForm.form_fields || [];
+      if (typeof fields === 'string') {
+        fields = JSON.parse(fields);
+      }
+      
+      // Transform form data into structured responses
+      const fieldResponses = fields.map((field: any, index: number) => {
+        const fieldName = `field_${field.id || index}`;
+        const value = formData[fieldName];
+        
+        return {
+          feedbackFieldId: field.id || `field_${index}`,
+          question: field.question || '',
+          label: field.label || '',
+          value: value !== undefined && value !== null ? value : ''
+        };
+      });
+
+      console.log('Structured field responses:', fieldResponses);
+
+      // Save feedback response with user_id
       const { error: saveError } = await supabase
         .from('event_feedback_responses')
         .insert({
           event_id: eventId,
           feedback_form_id: feedbackForm.id,
-          field_responses: formData,
+          user_id: user?.id || null,
+          field_responses: fieldResponses,
           created_at: new Date().toISOString()
         });
 
