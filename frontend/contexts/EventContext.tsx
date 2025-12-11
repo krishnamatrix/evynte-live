@@ -10,6 +10,7 @@ interface VenueInfo {
   venue_city?: string;
   venue_state?: string;
   venue_country?: string;
+  venueMapHtml?: string;
 }
 
 interface EventContextType {
