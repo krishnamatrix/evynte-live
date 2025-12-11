@@ -22,7 +22,8 @@ import {
   QrCode,
   X,
   LogOut,
-  Monitor
+  Monitor,
+  Map
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import styles from '../styles/HomeScreen.module.css';
@@ -136,10 +137,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   const getActiveAppItems = (): AppItem[] => {
     const items: AppItem[] = [];
     const settings = event?.liveSettings || {};
-    
     // Helper to check if feature is active
     const isActive = (key: string) => settings[key] === 'active' || !settings[key];
-    
+    console.log('Event venueMap settings:', isActive('venueMap'));
     // QR Code - only for logged in users and if enabled
     if (user && isActive('qr')) {
       items.push({
@@ -242,7 +242,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         color: '#FFA726'
       });
     }
-    
+ 
     return items;
   };
 

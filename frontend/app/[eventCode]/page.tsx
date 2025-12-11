@@ -127,7 +127,7 @@ export default function EventLandingPage() {
               kiosksLive: getStatus(liveSettings.live_kiosk_scanning_enabled, liveSettings.live_kiosk_scanning_coming_soon),
             };
           }
-
+          console.log('Parsed live settings:', parsedSettings);
           setEvent({
             id: eventData.id,
             name: eventData.event_name || 'Event',
@@ -144,10 +144,15 @@ export default function EventLandingPage() {
           });
 
           // Set event data in context for global access
+          const venues = eventData.event_venues;
+          const venueData = Array.isArray(venues) && venues.length > 0 ? venues[0] : null;
+          console.log('Setting event data in context with venue:', venueData);
+          
           setEventData(
             eventData.id,
             eventData.event_code,
-            eventData.event_name || 'Event'
+            eventData.event_name || 'Event',
+            venueData
           );
         }
       } catch (error) {

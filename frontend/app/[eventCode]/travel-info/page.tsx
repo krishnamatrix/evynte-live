@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from '@/styles/PlaceholderPage.module.css';
+import RichHTMLContent from '@/util/rich-html-content';
 
 export default function TravelInfoPage() {
   const router = useRouter();
@@ -82,22 +83,11 @@ export default function TravelInfoPage() {
       <div style={{
         flex: 1,
         overflowY: 'auto',
-        padding: '20px'
+        padding: '20px',
+        color: 'white'
       }}>
         {htmlContent ? (
-          <div
-            style={{
-              background: 'rgba(30, 27, 75, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: '20px',
-              padding: '30px',
-              color: 'white',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word'
-            }}
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+          <RichHTMLContent html={htmlContent} />
         ) : (
           <div style={{
             textAlign: 'center',
