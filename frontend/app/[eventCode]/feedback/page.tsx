@@ -166,7 +166,7 @@ export default function FeedbackPage() {
             </p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px', width: '100%' }}>
-              <button
+              {/* <button
                 onClick={() => router.push(`/${eventCode}/certificate`)}
                 style={{
                   display: 'flex',
@@ -188,7 +188,7 @@ export default function FeedbackPage() {
               >
                 <Download size={20} />
                 Download Certificate
-              </button>
+              </button> */}
               
               <button
                 onClick={() => router.back()}
