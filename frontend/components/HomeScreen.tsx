@@ -26,6 +26,7 @@ import {
   MapTrifold,
   ChatTeardropText,
   Question,
+  FilePdf,
   Icon
 } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabaseClient';
@@ -264,6 +265,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         path: `${eventCode}/feedback`,
         color: '#FF6B6B',
         requiresAuth: true
+      });
+    }
+    
+    if (isActive('quiz')) {
+      items.push({
+        id: 'quiz',
+        name: 'Quiz',
+        icon: Question,
+        path: `${eventCode}/quiz`,
+        color: '#9333EA'
+      });
+    }
+    
+    if (isActive('proceedings')) {
+      items.push({
+        id: 'proceedings',
+        name: 'Proceedings',
+        icon: FilePdf,
+        path: `${eventCode}/proceedings`,
+        color: '#DC2626'
       });
     }
     
