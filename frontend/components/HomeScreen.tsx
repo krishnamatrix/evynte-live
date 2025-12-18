@@ -25,6 +25,7 @@ import {
   Monitor,
   MapTrifold,
   ChatTeardropText,
+  Question,
   Icon
 } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabaseClient';
@@ -253,6 +254,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         path: `${eventCode}/feedback`,
         color: '#FF6B6B',
         requiresAuth: true
+      });
+    }
+    
+    if (isActive('quiz')) {
+      items.push({
+        id: 'quiz',
+        name: 'Quiz',
+        icon: Question,
+        path: `${eventCode}/quiz`,
+        color: '#9333EA'
       });
     }
  
