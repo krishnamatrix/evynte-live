@@ -19,7 +19,7 @@ export default function QuizPage() {
       </div>
       <div className={styles.iframeWrapper}>
         <iframe
-          src='http://evynti.up.railway.app/quiz/launch/INDICON2025Q1'
+          src='https://evynti.up.railway.app/quiz/launch/INDICON2025Q1'
           className={styles.iframe}
           title="Event Quiz"
         />

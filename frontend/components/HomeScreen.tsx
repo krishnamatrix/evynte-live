@@ -205,6 +205,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         color: '#4CAF50'
       });
     }
+
+    items.push({
+        id: 'quiz',
+        name: 'Quiz',
+        icon: Question,
+        path: `${eventCode}/quiz`,
+        color: '#9333EA'
+      });
     
     if (isActive('about')) {
       items.push({
@@ -246,13 +254,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       });
     }
     //if (isActive('quiz')) {
-      items.push({
-        id: 'quiz',
-        name: 'Quiz',
-        icon: Question,
-        path: `${eventCode}/quiz`,
-        color: '#9333EA'
-      });
+      
     //}
     if (isActive('feedback')) {
       items.push({
