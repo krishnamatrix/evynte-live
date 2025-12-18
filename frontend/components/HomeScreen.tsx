@@ -268,17 +268,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       });
     }
     
-    if (isActive('quiz')) {
-      items.push({
-        id: 'quiz',
-        name: 'Quiz',
-        icon: Question,
-        path: `${eventCode}/quiz`,
-        color: '#9333EA'
-      });
-    }
-    
-    if (isActive('proceedings')) {
       items.push({
         id: 'proceedings',
         name: 'Proceedings',
@@ -286,7 +275,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         path: `${eventCode}/proceedings`,
         color: '#DC2626'
       });
-    }
     
     
  
