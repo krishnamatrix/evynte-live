@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from '@phosphor-icons/react';
+import { ArrowLeft, Download } from '@phosphor-icons/react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -17,10 +17,20 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export default function ProceedingsPage() {
   const router = useRouter();
   const [numPages, setNumPages] = useState<number>(0);
+  const pdfUrl = "/assets/2025 IEEE INDICON - Conference Proceeding_new.pdf";
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = '2025_IEEE_INDICON_Proceedings.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className={styles.container}>
@@ -29,6 +39,42 @@ export default function ProceedingsPage() {
           <ArrowLeft size={24} />
         </button>
         <h1 className={styles.title}>Proceedings</h1>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'right',
+        padding: '10px 10px 0 10px',
+        background: 'rgba(30, 27, 75, 0.6)'
+      }}>
+        <button
+          onClick={handleDownload}
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            gap: '8px',
+            padding: '10px 20px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+          }}
+        >
+          <Download size={20} weight="bold" />
+          Download PDF
+        </button>
       </div>
       <div style={{ 
         flex: 1,
@@ -40,7 +86,7 @@ export default function ProceedingsPage() {
         background: 'rgba(30, 27, 75, 0.4)'
       }}>
         <Document
-          file="/assets/2025 IEEE INDICON - Conference Proceeding_new.pdf"
+          file={pdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
           loading={
             <div style={{ color: 'white', marginTop: '50px' }}>
