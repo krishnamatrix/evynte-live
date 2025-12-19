@@ -7,6 +7,7 @@ import styles from '@/styles/IframePage.module.css';
 export default function ProceedingsPage() {
   const router = useRouter();
   const pdfUrl = "/assets/2025 IEEE INDICON - Conference Proceeding_highest_compressed.pdf";
+  const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + pdfUrl)}&embedded=true`;
 
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -62,13 +63,35 @@ export default function ProceedingsPage() {
           Download PDF
         </button>
       </div>
-      <div className={styles.iframeWrapper} style={{ overflow: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        <iframe
-          src={pdfUrl}
-          className={styles.iframe}
-          title="Proceedings PDF"
-          style={{ overflow: 'auto', position: 'relative', height: 'auto', minHeight: '100%' }}
-        />
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative',
+        background: 'rgba(15, 12, 41, 0.4)'
+      }}><object
+          data={pdfUrl}
+          type="application/pdf"
+          style={{ 
+            width: '100%',
+            height: '100%',
+            minHeight: '100vh',
+            border: 'none',
+            display: 'block'
+          }}
+        >
+          <iframe
+            src={googleDocsUrl}
+            title="Proceedings PDF"
+            style={{ 
+              width: '100%',
+              height: '100%',
+              minHeight: '100vh',
+              border: 'none',
+              display: 'block'
+            }}
+          />
+        </object>
       </div>
     </div>
   );
