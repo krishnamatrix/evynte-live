@@ -17,7 +17,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export default function ProceedingsPage() {
   const router = useRouter();
   const [numPages, setNumPages] = useState<number>(0);
-  const pdfUrl = "/assets/2025 IEEE INDICON - Conference Proceeding_new.pdf";
+  const pdfUrl = "/assets/2025 IEEE INDICON - Conference Proceeding_highest_compressed.pdf";
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
