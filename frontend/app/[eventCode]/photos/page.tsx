@@ -4,16 +4,16 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft } from '@phosphor-icons/react';
 import styles from '@/styles/IframePage.module.css';
 
-export default function CertificatePage() {
+export default function PhotosPage() {
   const router = useRouter();
   const { eventCode } = useParams();
 
-  // Certificate URLs for different events
-  const certificateUrls: Record<string, string> = {
-    'indicon2025': 'https://indiconcertificates2025.streamlit.app/'
+  // Google Drive folder URLs for different events
+  const photosUrls: Record<string, string> = {
+    'indicon2025': 'https://drive.google.com/embeddedfolderview?id=1AstdmPvVmSgk8ZFFVqdPYUk1LVyPTOiM#list'
   };
 
-  const certificateUrl = certificateUrls[eventCode as string] || '';
+  const photosUrl = photosUrls[eventCode as string] || '';
 
   return (
     <div className={styles.container}>
@@ -25,20 +25,20 @@ export default function CertificatePage() {
         >
           <ArrowLeft size={24} />
         </button>
-        <h1 className={styles.title}>Certificate</h1>
+        <h1 className={styles.title}>Event Photos</h1>
       </div>
 
       <div className={styles.iframeWrapper}>
-        {certificateUrl ? (
+        {photosUrl ? (
           <iframe
-            src={certificateUrl}
+            src={photosUrl}
             className={styles.iframe}
-            title="Certificate"
+            title="Event Photos"
             allowFullScreen
           />
         ) : (
           <div className={styles.placeholder}>
-            <p>Certificate not available for this event.</p>
+            <p>Photos gallery not available for this event.</p>
           </div>
         )}
       </div>

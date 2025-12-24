@@ -27,7 +27,9 @@ import {
   ChatTeardropText,
   Question,
   FilePdf,
-  Icon
+  Icon,
+  Certificate,
+  Images
 } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabaseClient';
 import styles from '../styles/HomeScreen.module.css';
@@ -40,6 +42,7 @@ interface AppItem {
   path: string;
   color: string;
   requiresAuth?: boolean;
+  externalUrl?: string;
 }
 
 interface User {
@@ -276,6 +279,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         color: '#DC2626'
       });
     
+    // Certificate and Photos - only for indicon2025
+    if (eventCode === 'indicon2025') {
+      items.push({
+        id: 'certificate',
+        name: 'Certificate',
+        icon: Certificate,
+        path: `${eventCode}/certificate`,
+        color: '#8B5CF6',
+        externalUrl: 'https://indiconcertificates2025.streamlit.app'
+      });
+      
+      items.push({
+        id: 'photos',
+        name: 'Photos',
+        icon: Images,
+        path: `${eventCode}/photos`,
+        color: '#EC4899'
+      });
+    }
     
  
     return items;
@@ -502,6 +524,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className={styles.appGrid}>
         {activeAppItems.map((item) => {
           const Icon = item.icon;
+          
+          // If item has external URL, render as link
+          if (item.externalUrl) {
+            return (
+              <a
+                key={item.id}
+                href={item.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.appItem}
+                style={{ '--app-color': item.color } as React.CSSProperties}
+              >
+                <div className={styles.iconWrapper}>
+                  <Icon className={styles.icon} size={32} />
+                </div>
+                <span className={styles.appName}>{item.name}</span>
+              </a>
+            );
+          }
+          
           return (
             <button
               key={item.id}

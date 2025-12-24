@@ -53,7 +53,7 @@
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: rgba(15, 12, 41, 0.4);
+  background: #ffffff;
 }
 
 .iframe {
@@ -74,6 +74,21 @@
 .iframe {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+}
+
+.placeholder p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  margin: 0;
 }
 
 @media (max-width: 360px) {
